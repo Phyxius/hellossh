@@ -21,7 +21,11 @@ namespace SSHAgentFramework
             {
                 using var pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.InOut);
                 pipeServer.WaitForConnection();
-                HandleClient(pipeServer);
+                //TODO: make this handle multiple clients in parallel threads or something
+                while (pipeServer.IsConnected)
+                {
+                    HandleClient(pipeServer);
+                }
             }
         }
 
@@ -47,7 +51,9 @@ namespace SSHAgentFramework
             var response = ProcessMessage(AgentMessage.Deserialize(fullMessage));
             if (response != null)
             {
-                pipeServer.Write(response.ToAgentMessage().Serialize());
+                byte[] buffer = response.ToAgentMessage().Serialize();
+                Console.WriteLine("> " + BitConverter.ToString(buffer).Replace("-", ""));
+                pipeServer.Write(buffer);
             }
         }
     }

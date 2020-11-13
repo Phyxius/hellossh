@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading;
 using Windows.Security.Credentials;
 using Windows.Security.Cryptography.Core;
+using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
+using System.Security.Cryptography;
 
 namespace HelloSSH
 {
@@ -16,7 +18,7 @@ namespace HelloSSH
         public HelloSSHAgent()
         {
             LoadOrCreateCredential();
-            Console.WriteLine(PublicKeyToSSHFormat(credential));
+            Console.WriteLine(PublicKeyToInterchangeFormat(credential));
         }
 
         public override IAgentMessage ProcessMessage(AgentMessage message)
@@ -26,10 +28,17 @@ namespace HelloSSH
                 case AgentMessageType.SSH_AGENTC_REQUEST_IDENTITIES:
                     return new AgentIdentitiesAnswerMessage
                     {
-                        Keys = new List<(string, string)>()
+                        Keys = new List<(byte[], string)>()
                         {
-                            (PublicKeyToSSHFormat(credential), credential.Name)
+                            (PublicKeyToWireFormat(credential), credential.Name)
                         }
+                    };
+                case AgentMessageType.SSH_AGENTC_SIGN_REQUEST:
+                    var request = ClientSignRequestMessage.Deserialize(message.Contents);
+                    return new AgentSignResponseMessage
+                    {
+                        Type = "rsa-sha2-512",
+                        Blob = SignChallenge(credential, request.Challenge, SignatureType.RSA_SHA2_256)
                     };
                 default:
                     return base.ProcessMessage(message);
@@ -56,8 +65,34 @@ namespace HelloSSH
             }
         }
 
+        private enum SignatureType
+        {
+            RSA_SHA2_256, RSA_SHA2_512
+        }
+        private byte[] SignChallenge(KeyCredential credential, byte[] challenge, SignatureType type)
+        {
+            switch(type)
+            {
+                case SignatureType.RSA_SHA2_256:
+                    challenge = SHA256.Create().ComputeHash(challenge);
+                    break;
+                case SignatureType.RSA_SHA2_512:
+                    challenge = SHA512.Create().ComputeHash(challenge);
+                    break;
+            }
+            var task = credential.RequestSignAsync(CryptographicBuffer.CreateFromByteArray(challenge)).AsTask();
+            task.Wait();
+            var result = task.Result;
+            return result.Result.ToArray();
+        }
+
         //https://coolaj86.com/articles/the-ssh-public-key-format/
-        private static string PublicKeyToSSHFormat(KeyCredential cred)
+        private static string PublicKeyToInterchangeFormat(KeyCredential cred)
+        {
+            //TODO: THIS IS CURRENTLY NOT CORRECT
+            return "ssh-rsa " + Convert.ToBase64String(PublicKeyToWireFormat(cred));
+        }
+        private static byte[] PublicKeyToWireFormat(KeyCredential cred)
         {
             var publicKeyStream = cred.RetrievePublicKey(CryptographicPublicKeyBlobType.BCryptPublicKey).AsStream();
             var header = BCryptKeyBlob.FromStream(publicKeyStream);
@@ -72,5 +107,6 @@ namespace HelloSSH
 
             return keyData.Serialize();
         }
+
     }
 }

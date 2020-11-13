@@ -14,24 +14,14 @@ namespace HelloSSH
         public byte[] ExponentOrECTypeName;
         public byte[] ModulusOrECPoint;
 
-        public string Serialize()
+        public byte[] Serialize()
         {
-            var ret = new StringBuilder();//(KeyType);
-            //ret.Append(" ");
-            var buff = SerializeBuffer(Encoding.ASCII.GetBytes(KeyType))
-                .Concat(SerializeBuffer(ExponentOrECTypeName))
-                .Concat(SerializeBuffer(ModulusOrECPoint))
+            //this only works for RSA but that's ok for now 
+            var buff = WireUtils.EncodeString(KeyType)
+                .Concat(WireUtils.EncodeToMPInt(ExponentOrECTypeName))
+                .Concat(WireUtils.EncodeToMPInt(ModulusOrECPoint))
                 .ToArray();
-            ret.Append(Convert.ToBase64String(buff));
-            return ret.ToString();
-        }
-
-        private static byte[] SerializeBuffer(byte[] buffer)
-        {
-            var ret = new Span<byte>(new byte[4 + buffer.Length]);
-            WireUtils.TryWriteUintToWire(ret, (uint)buffer.Length);
-            buffer.CopyTo(ret[4..]);
-            return ret.ToArray();
+            return WireUtils.EncodeString(buff);
         }
     }
 }
