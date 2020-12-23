@@ -10,6 +10,7 @@ namespace HelloSSH
     class EncodedSSHPublicKey
     {
         public const string KEY_TYPE_RSA = "ssh-rsa";
+        public const string KEY_TYPE_RSA_SHA256 = "rsa-sha2-256";
         public string KeyType;
         public byte[] ExponentOrECTypeName;
         public byte[] ModulusOrECPoint;

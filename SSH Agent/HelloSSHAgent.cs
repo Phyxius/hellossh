@@ -37,7 +37,7 @@ namespace HelloSSH
                     var request = ClientSignRequestMessage.Deserialize(message.Contents);
                     return new AgentSignResponseMessage
                     {
-                        Type = "rsa-sha2-512",
+                        Type = "rsa-sha2-256",
                         Blob = SignChallenge(credential, request.Challenge, SignatureType.RSA_SHA2_256)
                     };
                 default:
@@ -71,15 +71,15 @@ namespace HelloSSH
         }
         private byte[] SignChallenge(KeyCredential credential, byte[] challenge, SignatureType type)
         {
-            switch(type)
-            {
-                case SignatureType.RSA_SHA2_256:
-                    challenge = SHA256.Create().ComputeHash(challenge);
-                    break;
-                case SignatureType.RSA_SHA2_512:
-                    challenge = SHA512.Create().ComputeHash(challenge);
-                    break;
-            }
+            //switch(type)
+            //{
+            //    case SignatureType.RSA_SHA2_256:
+            //        challenge = SHA256.Create().ComputeHash(challenge);
+            //        break;
+            //    case SignatureType.RSA_SHA2_512:
+            //        challenge = SHA512.Create().ComputeHash(challenge);
+            //        break;
+            //}
             var task = credential.RequestSignAsync(CryptographicBuffer.CreateFromByteArray(challenge)).AsTask();
             task.Wait();
             var result = task.Result;
@@ -98,7 +98,7 @@ namespace HelloSSH
             var header = BCryptKeyBlob.FromStream(publicKeyStream);
             var keyData = new EncodedSSHPublicKey
             {
-                KeyType = EncodedSSHPublicKey.KEY_TYPE_RSA,
+                KeyType = EncodedSSHPublicKey.KEY_TYPE_RSA_SHA256,
                 ExponentOrECTypeName = new byte[header.cbPublicExp],
                 ModulusOrECPoint = new byte[header.cbModulus]
             };
