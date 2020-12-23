@@ -34,6 +34,11 @@ namespace SSHAgentFramework
             Console.WriteLine("Connected!");
             var lengthBytes = new byte[sizeof(uint)];
             int readBytes = pipeServer.Read(lengthBytes, 0, lengthBytes.Length);
+            if (readBytes == 0)
+            {
+                // empty/closed connection
+                return;
+            }
             if (readBytes != lengthBytes.Length)
             {
                 Console.WriteLine($"Malformed message! Expecting {lengthBytes.Length}, got {readBytes}.");
