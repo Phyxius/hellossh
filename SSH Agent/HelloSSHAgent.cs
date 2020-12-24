@@ -9,16 +9,18 @@ using Windows.Security.Cryptography.Core;
 using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using System.Security.Cryptography;
+using System.Linq;
 
 namespace HelloSSH
 {
     class HelloSSHAgent : AbstractSSHAgent
     {
-        KeyCredential credential;
-        public HelloSSHAgent()
+        readonly ConfigurationProvider configuration;
+        List<KeyCredential> credentials = new List<KeyCredential>();
+        public HelloSSHAgent(ConfigurationProvider configurationProvider)
         {
-            LoadOrCreateCredential();
-            Console.WriteLine(PublicKeyToInterchangeFormat(credential));
+            this.configuration = configurationProvider;
+            LoadOrCreateCredentials();
         }
 
         public override IAgentMessage ProcessMessage(AgentMessage message)
@@ -28,14 +30,21 @@ namespace HelloSSH
                 case AgentMessageType.SSH_AGENTC_REQUEST_IDENTITIES:
                     return new AgentIdentitiesAnswerMessage
                     {
-                        Keys = new List<(byte[], string)>()
-                        {
-                            (PublicKeyToWireFormat(credential), credential.Name)
-                        }
+                        Keys = credentials.Select(cred => (PublicKeyToWireFormat(cred), cred.Name)).ToList()
                     };
                 case AgentMessageType.SSH_AGENTC_SIGN_REQUEST:
                     var request = ClientSignRequestMessage.Deserialize(message.Contents);
-                    var blob = SignChallenge(credential, request.Challenge);
+                    if ((request.Flags & (uint)AgentSignatureFlags.SSH_AGENT_RSA_SHA2_256) == 0)
+                    {
+                        return new AgentFailureMessage();
+                    }
+                    // the request's key blob length will get stripped out by the parser, so we tell our serializer not to include it
+                    var cred = credentials.Find(cred => PublicKeyToWireFormat(cred, false).SequenceEqual(request.KeyBlob));
+                    if (cred == null)
+                    {
+                        return new AgentFailureMessage();
+                    }
+                    var blob = SignChallenge(cred, request.Challenge);
                     if (blob == null) return new AgentFailureMessage();
                     return new AgentSignResponseMessage
                     {
@@ -46,22 +55,34 @@ namespace HelloSSH
                     return base.ProcessMessage(message);
             }
         }
-
-        private void LoadOrCreateCredential()
+        private void LoadOrCreateCredentials()
         {
-            var resultTask = KeyCredentialManager.RequestCreateAsync("hellossh", KeyCredentialCreationOption.FailIfExists).AsTask();
+            foreach (string handle in configuration.Configuration.KeyHandles)
+            {
+                var credential = LoadOrCreateCredential(handle);
+                if (credential != null)
+                {
+                    credentials.Add(credential);
+                }
+            }
+        }
+        private KeyCredential LoadOrCreateCredential(string name)
+        {
+            var resultTask = KeyCredentialManager.RequestCreateAsync(name, KeyCredentialCreationOption.FailIfExists).AsTask();
             resultTask.Wait();
             var result = resultTask.Result;
             switch(result.Status)
             {
                 case KeyCredentialStatus.Success:
-                    credential = result.Credential;
-                    return;
+                    return result.Credential;
                 case KeyCredentialStatus.CredentialAlreadyExists:
-                    var openTask = KeyCredentialManager.OpenAsync("hellossh").AsTask();
+                    var openTask = KeyCredentialManager.OpenAsync(name).AsTask();
                     openTask.Wait();
-                    credential = openTask.Result.Credential;
-                    return;
+                    return openTask.Result.Credential;
+                case KeyCredentialStatus.UserCanceled:
+                case KeyCredentialStatus.UserPrefersPassword:
+                    Console.WriteLine("You canceled creating a key! Continuing...");
+                    return null;
                 default:
                     throw new Exception(result.Status.ToString());
             }
@@ -75,26 +96,31 @@ namespace HelloSSH
             return result.Result?.ToArray();
         }
 
+        public void ListenOnNamedPipe()
+        {
+            ListenOnNamedPipe(configuration.Configuration.NamedPipeLocation);
+        }
+
         //https://coolaj86.com/articles/the-ssh-public-key-format/
         private static string PublicKeyToInterchangeFormat(KeyCredential cred)
         {
             //TODO: THIS IS CURRENTLY NOT CORRECT
             return "ssh-rsa " + Convert.ToBase64String(PublicKeyToWireFormat(cred));
         }
-        private static byte[] PublicKeyToWireFormat(KeyCredential cred)
+        private static byte[] PublicKeyToWireFormat(KeyCredential cred, bool includeOverallLength = true)
         {
             var publicKeyStream = cred.RetrievePublicKey(CryptographicPublicKeyBlobType.BCryptPublicKey).AsStream();
             var header = BCryptKeyBlob.FromStream(publicKeyStream);
-            var keyData = new EncodedSSHPublicKey
+            var keyData = new SSHPublicKey
             {
-                KeyType = EncodedSSHPublicKey.KEY_TYPE_RSA_SHA256,
+                KeyType = SSHPublicKey.KEY_TYPE_RSA,
                 ExponentOrECTypeName = new byte[header.cbPublicExp],
                 ModulusOrECPoint = new byte[header.cbModulus]
             };
             publicKeyStream.Read(keyData.ExponentOrECTypeName, 0, keyData.ExponentOrECTypeName.Length);
             publicKeyStream.Read(keyData.ModulusOrECPoint, 0, keyData.ModulusOrECPoint.Length);
 
-            return keyData.Serialize();
+            return keyData.Serialize(includeOverallLength);
         }
 
     }

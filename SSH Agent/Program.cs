@@ -5,16 +5,25 @@ namespace HelloSSH
 {
     class Program
     {
+        const string DefaultConfigLocation = "helossh.json";
         static void Main(string[] args)
         {
-            //GenerateKey();
-            new HelloSSHAgent().ListenOnNamedPipe("hellossh");
+            if (args.Length > 1)
+            {
+                PrintUsageAndExit();
+            }
+            var configLocation = DefaultConfigLocation;
+            if (args.Length > 0)
+            {
+                configLocation = args[1];
+            }
+            new HelloSSHAgent(new ConfigurationProvider(configLocation)).ListenOnNamedPipe();
         }
-        
-        static async void GenerateKey()
+
+        private static void PrintUsageAndExit()
         {
-            var result = await KeyCredentialManager.RequestCreateAsync("test", KeyCredentialCreationOption.ReplaceExisting);
-            Console.WriteLine(result.Status);
+            Console.WriteLine(@"Usage: heloossh.exe [C:\path\to\config.json]");
+            Environment.Exit(-1);
         }
     }
 }
