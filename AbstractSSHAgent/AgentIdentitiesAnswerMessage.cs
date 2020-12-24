@@ -7,7 +7,7 @@ namespace SSHAgentFramework
 {
     public class AgentIdentitiesAnswerMessage : IAgentMessage
     {
-        public List<(byte[], string)> Keys;
+        public List<(SSHPublicKey, string)> Keys;
 
         public AgentMessage ToAgentMessage()
         {
@@ -22,9 +22,9 @@ namespace SSHAgentFramework
             };
         }
 
-        private static byte[] KeyAndCommentToWireEncoding((byte[], string) tuple)
+        private static byte[] KeyAndCommentToWireEncoding((SSHPublicKey, string) tuple)
         {
-            return tuple.Item1
+            return tuple.Item1.Serialize()
                 .Concat(WireUtils.EncodeString(tuple.Item2))
                 .ToArray();
         }

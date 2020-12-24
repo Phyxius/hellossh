@@ -30,7 +30,7 @@ namespace HelloSSH
                 case AgentMessageType.SSH_AGENTC_REQUEST_IDENTITIES:
                     return new AgentIdentitiesAnswerMessage
                     {
-                        Keys = credentials.Select(cred => (PublicKeyToWireFormat(cred), cred.Name)).ToList()
+                        Keys = credentials.Select(cred => (GetPublicKeyFromCredential(cred), cred.Name)).ToList()
                     };
                 case AgentMessageType.SSH_AGENTC_SIGN_REQUEST:
                     var request = ClientSignRequestMessage.Deserialize(message.Contents);
@@ -39,7 +39,7 @@ namespace HelloSSH
                         return new AgentFailureMessage();
                     }
                     // the request's key blob length will get stripped out by the parser, so we tell our serializer not to include it
-                    var cred = credentials.Find(cred => PublicKeyToWireFormat(cred, false).SequenceEqual(request.KeyBlob));
+                    var cred = credentials.Find(cred => GetPublicKeyFromCredential(cred).Serialize(false).SequenceEqual(request.KeyBlob));
                     if (cred == null)
                     {
                         return new AgentFailureMessage();
@@ -105,9 +105,9 @@ namespace HelloSSH
         private static string PublicKeyToInterchangeFormat(KeyCredential cred)
         {
             //TODO: THIS IS CURRENTLY NOT CORRECT
-            return "ssh-rsa " + Convert.ToBase64String(PublicKeyToWireFormat(cred));
+            return "ssh-rsa " + Convert.ToBase64String(GetPublicKeyFromCredential(cred).Serialize());
         }
-        private static byte[] PublicKeyToWireFormat(KeyCredential cred, bool includeOverallLength = true)
+        private static SSHPublicKey GetPublicKeyFromCredential(KeyCredential cred)
         {
             var publicKeyStream = cred.RetrievePublicKey(CryptographicPublicKeyBlobType.BCryptPublicKey).AsStream();
             var header = BCryptKeyBlob.FromStream(publicKeyStream);
@@ -120,7 +120,7 @@ namespace HelloSSH
             publicKeyStream.Read(keyData.ExponentOrECTypeName, 0, keyData.ExponentOrECTypeName.Length);
             publicKeyStream.Read(keyData.ModulusOrECPoint, 0, keyData.ModulusOrECPoint.Length);
 
-            return keyData.Serialize(includeOverallLength);
+            return keyData;
         }
 
     }
