@@ -35,10 +35,12 @@ namespace HelloSSH
                     };
                 case AgentMessageType.SSH_AGENTC_SIGN_REQUEST:
                     var request = ClientSignRequestMessage.Deserialize(message.Contents);
+                    var blob = SignChallenge(credential, request.Challenge);
+                    if (blob == null) return new AgentFailureMessage();
                     return new AgentSignResponseMessage
                     {
                         Type = "rsa-sha2-256",
-                        Blob = SignChallenge(credential, request.Challenge, SignatureType.RSA_SHA2_256)
+                        Blob = blob
                     };
                 default:
                     return base.ProcessMessage(message);
@@ -65,25 +67,12 @@ namespace HelloSSH
             }
         }
 
-        private enum SignatureType
+        private byte[] SignChallenge(KeyCredential credential, byte[] challenge)
         {
-            RSA_SHA2_256, RSA_SHA2_512
-        }
-        private byte[] SignChallenge(KeyCredential credential, byte[] challenge, SignatureType type)
-        {
-            //switch(type)
-            //{
-            //    case SignatureType.RSA_SHA2_256:
-            //        challenge = SHA256.Create().ComputeHash(challenge);
-            //        break;
-            //    case SignatureType.RSA_SHA2_512:
-            //        challenge = SHA512.Create().ComputeHash(challenge);
-            //        break;
-            //}
             var task = credential.RequestSignAsync(CryptographicBuffer.CreateFromByteArray(challenge)).AsTask();
             task.Wait();
             var result = task.Result;
-            return result.Result.ToArray();
+            return result.Result?.ToArray();
         }
 
         //https://coolaj86.com/articles/the-ssh-public-key-format/

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SSHAgentFramework
 {
-    class AgentFailureMessage : IAgentMessage
+    public class AgentFailureMessage : IAgentMessage
     {
         public AgentMessage ToAgentMessage()
         {
