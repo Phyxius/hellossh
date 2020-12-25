@@ -5,11 +5,13 @@ using System.IO.Pipes;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Threading;
 
 namespace SSHAgentFramework
 {
     public class AbstractSSHAgent
     {
+        public bool IsCanceled { get; private set; }
         public virtual IAgentMessage ProcessMessage(AgentMessage message)
         {
             return new AgentFailureMessage();
@@ -17,18 +19,24 @@ namespace SSHAgentFramework
 
         public void ListenOnNamedPipe(string pipeName)
         {
-            while (true)
+            while (!IsCanceled)
             {
-                using var pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.InOut);
+                var pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances);
                 pipeServer.WaitForConnection();
-                //TODO: make this handle multiple clients in parallel threads or something
-                while (pipeServer.IsConnected)
-                {
-                    HandleClient(pipeServer);
-                }
+                new Thread(HandleClientThread).Start(pipeServer);
             }
         }
 
+        public void Cancel() => IsCanceled = true;
+
+        private void HandleClientThread(object o)
+        {
+            using var pipeServer = (NamedPipeServerStream)o;
+            while (pipeServer.IsConnected && !IsCanceled)
+            {
+                HandleClient(pipeServer);
+            }
+        }
         private void HandleClient(NamedPipeServerStream pipeServer)
         {
             Console.WriteLine("Connected!");
