@@ -1,5 +1,4 @@
 ﻿using System;
-using Windows.Security.Credentials;
 
 namespace HelloSSH
 {

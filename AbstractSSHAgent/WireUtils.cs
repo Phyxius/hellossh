@@ -21,7 +21,6 @@ namespace SSHAgentFramework
         public static byte[] EncodeToMPInt(uint n)
         {
             return EncodeToMPInt(BitConverter.GetBytes(n), true);
-    
         }
 
         public static byte[] EncodeToMPInt(byte[] buff, bool handleEndianness = false)
