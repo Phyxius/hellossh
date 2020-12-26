@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Security.Credentials;
 using Windows.Security.Cryptography.Core;
+using System.Security.Cryptography;
 
 namespace HelloSSH
 {
@@ -13,6 +14,7 @@ namespace HelloSSH
         public readonly KeyCredential Credential;
         public readonly string Comment;
         public readonly string PublicKeyFingerprint;
+        public readonly string PublicKeyHash;
         public readonly byte[] KeyIdentifier;
         public readonly SSHPublicKey PublicKey;
 
@@ -23,17 +25,30 @@ namespace HelloSSH
             PublicKey = GetPublicKeyFromCredential(credential);
             KeyIdentifier = PublicKey.Serialize(false);
             PublicKeyFingerprint = GetKeyFingerprint(PublicKey, Comment);
+            PublicKeyHash = GetKeyHash(PublicKey);
         }
 
         //https://coolaj86.com/articles/the-ssh-public-key-format/
         private static string GetKeyFingerprint(SSHPublicKey publicKey, string comment)
         {
-            var fpBytes = WireUtils.EncodeString(publicKey.KeyType)
+            byte[] fpBytes = GetKeyFingerprintBytes(publicKey);
+            return $"{publicKey.KeyType} {Convert.ToBase64String(fpBytes)} {comment}";
+        }
+
+        //https://coolaj86.com/articles/ssh-pubilc-key-fingerprints/
+        private static string GetKeyHash(SSHPublicKey publicKey)
+        {
+            var hashedFpBytes = SHA256.HashData(GetKeyFingerprintBytes(publicKey));
+            return $"SHA256:{Convert.ToBase64String(hashedFpBytes).Trim('=')}";
+        }
+        private static byte[] GetKeyFingerprintBytes(SSHPublicKey publicKey)
+        {
+            return WireUtils.EncodeString(publicKey.KeyType)
                 .Concat(WireUtils.EncodeToMPInt(publicKey.ExponentOrECTypeName))
                 .Concat(WireUtils.EncodeToMPInt(publicKey.ModulusOrECPoint))
                 .ToArray();
-            return $"{publicKey.KeyType} {Convert.ToBase64String(fpBytes)} {comment}";
         }
+
         private static SSHPublicKey GetPublicKeyFromCredential(KeyCredential cred)
         {
             var publicKeyStream = cred.RetrievePublicKey(CryptographicPublicKeyBlobType.BCryptPublicKey).AsStream();
