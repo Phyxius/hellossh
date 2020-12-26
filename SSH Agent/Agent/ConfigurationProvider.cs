@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Text.Json;
+﻿using System.IO;
 
-namespace HelloSSH
+namespace HelloSSH.Agent
 {
     class ConfigurationProvider
     {

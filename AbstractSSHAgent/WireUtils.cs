@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -25,7 +24,7 @@ namespace SSHAgentFramework
 
         public static byte[] EncodeToMPInt(byte[] buff, bool handleEndianness = false)
         {
-            if (handleEndianness && !BitConverter.IsLittleEndian) 
+            if (handleEndianness && !BitConverter.IsLittleEndian)
                 buff = buff.Reverse().ToArray();
             buff = buff.SkipWhile(b => b == 0)
                 .ToArray();

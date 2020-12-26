@@ -1,10 +1,5 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.IO.Pipes;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using System.Threading;
 
 namespace SSHAgentFramework

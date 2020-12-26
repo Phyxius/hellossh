@@ -1,17 +1,13 @@
 ﻿using SSHAgentFramework;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading;
-using Windows.Security.Credentials;
-using Windows.Security.Cryptography.Core;
-using Windows.Security.Cryptography;
-using Windows.Storage.Streams;
-using System.Security.Cryptography;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Security.Credentials;
+using Windows.Security.Cryptography;
+using Windows.Security.Cryptography.Core;
 
-namespace HelloSSH
+namespace HelloSSH.Agent
 {
     class HelloSSHAgent : AbstractSSHAgent
     {
@@ -19,7 +15,7 @@ namespace HelloSSH
         List<KeyCredential> credentials = new List<KeyCredential>();
         public HelloSSHAgent(ConfigurationProvider configurationProvider)
         {
-            this.configuration = configurationProvider;
+            configuration = configurationProvider;
             LoadOrCreateCredentials();
         }
 
@@ -71,7 +67,7 @@ namespace HelloSSH
             var resultTask = KeyCredentialManager.RequestCreateAsync(name, KeyCredentialCreationOption.FailIfExists).AsTask();
             resultTask.Wait();
             var result = resultTask.Result;
-            switch(result.Status)
+            switch (result.Status)
             {
                 case KeyCredentialStatus.Success:
                     return result.Credential;

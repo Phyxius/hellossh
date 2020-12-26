@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Windows.Storage.Streams;
-using SSHAgentFramework;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System.IO;
 using System.Runtime.InteropServices;
-using System.IO;
 
-namespace HelloSSH
+namespace HelloSSH.Agent
 {
     struct BCryptKeyBlob
     {
