@@ -3,6 +3,7 @@ using System;
 using System.Windows.Forms;
 using System.Threading;
 using System.Drawing;
+using HelloSSH.KeyManager;
 
 namespace HelloSSH
 {
@@ -25,24 +26,16 @@ namespace HelloSSH
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var agent = new HelloSSHAgent(new ConfigurationProvider(configLocation));
-            new Thread(agent.ListenOnNamedPipe).Start();
-            var contextMenu = new ContextMenuStrip();
-            contextMenu.Items.Add("&Exit");
-            contextMenu.Items.Add("&About HelloSSH");
-            contextMenu.Items.Add("Open key &manager");
-            var icon = new NotifyIcon
-            {
-                Icon = Properties.Resources.ApplicationIcon,
-                Visible = true,
-                Text = "HelloSSH",
-                ContextMenuStrip = contextMenu
-            };
+            Thread agentThread = new Thread(agent.ListenOnNamedPipe);
+            agentThread.IsBackground = true;
+            agentThread.Start();
+            TrayIcon.CreateTrayIcon();
             Application.Run();
         }
 
         private static void PrintUsageAndExit()
         {
-            Console.WriteLine(@"Usage: heloossh.exe [C:\path\to\config.json]");
+            MessageBox.Show(null, @"Usage: heloossh.exe [C:\path\to\config.json]", "Usage", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Environment.Exit(-1);
         }
     }

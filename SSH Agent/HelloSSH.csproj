@@ -6,6 +6,7 @@
     <RootNamespace>HelloSSH</RootNamespace>
     <ApplicationIcon>noun_fingerprint_lock.ico</ApplicationIcon>
     <UseWindowsForms>true</UseWindowsForms>
+    <UseWpf>true</UseWpf>
   </PropertyGroup>
 
   <ItemGroup>
