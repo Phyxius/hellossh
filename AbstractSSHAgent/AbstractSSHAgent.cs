@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Pipes;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace SSHAgentFramework
@@ -7,7 +8,7 @@ namespace SSHAgentFramework
     public class AbstractSSHAgent
     {
         public bool IsCanceled { get; private set; }
-        public virtual IAgentMessage ProcessMessage(AgentMessage message)
+        public virtual IAgentMessage ProcessMessage(AgentMessage message, UInt32 clientProcessId)
         {
             return new AgentFailureMessage();
         }
@@ -23,6 +24,17 @@ namespace SSHAgentFramework
         }
 
         public void Cancel() => IsCanceled = true;
+
+        // adapted from https://stackoverflow.com/questions/15896315/get-process-id-of-a-client-that-connected-to-a-named-pipe-server-with-c-sharp
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern bool GetNamedPipeClientProcessId(IntPtr Pipe, out uint ClientProcessId);
+        private static uint getNamedPipeClientProcID(NamedPipeServerStream pipeServer)
+        {
+            var hPipe = pipeServer.SafePipeHandle.DangerousGetHandle();
+            if (GetNamedPipeClientProcessId(hPipe, out uint nProcID))
+                return nProcID;
+            return 0;
+        }
 
         private void HandleClientThread(object o)
         {
@@ -56,7 +68,8 @@ namespace SSHAgentFramework
                 Console.WriteLine($"Malformed message! Expecting {length}, got {readBytes}.");
                 return;
             }
-            var response = ProcessMessage(AgentMessage.Deserialize(fullMessage));
+            var clientProcId = getNamedPipeClientProcID(pipeServer);
+            var response = ProcessMessage(AgentMessage.Deserialize(fullMessage), clientProcId);
             if (response != null)
             {
                 byte[] buffer = response.ToAgentMessage().Serialize();
