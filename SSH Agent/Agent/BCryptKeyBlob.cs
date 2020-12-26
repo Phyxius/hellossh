@@ -11,12 +11,15 @@ namespace HelloSSH.Agent
         const uint BCRYPT_RSAPRIVATE_MAGIC = 0x32415352;  // "RSA2"
         const uint BCRYPT_RSAFULLPRIVATE_MAGIC = 0x33415352;  // "RSA3";
 
+        //these fields are never directly assigned to directly, but the marshaler will assign to them
+#pragma warning disable 0649
         public uint Magic;
         public uint BitLength;
         public uint cbPublicExp;
         public uint cbModulus;
         public uint cbPrime1;
         public uint cbPrime2;
+#pragma warning restore 0649
 
         public static BCryptKeyBlob FromStream(Stream stream)
         {
