@@ -1,12 +1,10 @@
 ﻿using HelloSSH.Agent;
 using SSHAgentFramework;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 using Windows.Security.Credentials;
 using Windows.Security.Cryptography.Core;
-using System.Linq;
 
 namespace HelloSSH
 {
@@ -24,7 +22,7 @@ namespace HelloSSH
             Comment = comment;
             PublicKey = GetPublicKeyFromCredential(credential);
             KeyIdentifier = PublicKey.Serialize(false);
-            PublicKeyFingerprint = GetKeyFingerprint(PublicKey, Comment); 
+            PublicKeyFingerprint = GetKeyFingerprint(PublicKey, Comment);
         }
 
         //https://coolaj86.com/articles/the-ssh-public-key-format/

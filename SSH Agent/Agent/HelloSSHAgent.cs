@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Security.Credentials;
 using Windows.Security.Cryptography;
-using Windows.Security.Cryptography.Core;
 
 namespace HelloSSH.Agent
 {
