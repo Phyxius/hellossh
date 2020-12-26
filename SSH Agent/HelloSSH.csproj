@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>HelloSSH</RootNamespace>
+    <ApplicationIcon>noun_fingerprint_lock.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
