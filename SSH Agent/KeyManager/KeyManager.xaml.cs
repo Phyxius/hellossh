@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HelloSSH.DataStore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,12 @@ namespace HelloSSH.KeyManager
     /// </summary>
     public partial class KeyManager : Window
     {
-        public KeyManager()
+        private readonly SynchronizedDataStore dataStore;
+        internal KeyManager(SynchronizedDataStore dataStore)
         {
+            this.dataStore = dataStore;
             InitializeComponent();
+            KeysList.ItemsSource = dataStore.Keys;
         }
     }
 }

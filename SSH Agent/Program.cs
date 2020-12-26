@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Drawing;
 using HelloSSH.KeyManager;
+using HelloSSH.DataStore;
 
 namespace HelloSSH
 {
@@ -25,11 +26,12 @@ namespace HelloSSH
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var agent = new HelloSSHAgent(new ConfigurationProvider(configLocation));
+            var dataStore = new SynchronizedDataStore(new ConfigurationProvider(configLocation));
+            var agent = new HelloSSHAgent(dataStore);
             Thread agentThread = new Thread(agent.ListenOnNamedPipe);
             agentThread.IsBackground = true;
             agentThread.Start();
-            TrayIcon.CreateTrayIcon();
+            TrayIcon.CreateTrayIcon(dataStore);
             Application.Run();
         }
 

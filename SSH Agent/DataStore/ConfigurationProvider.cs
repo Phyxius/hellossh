@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace HelloSSH.Agent
+namespace HelloSSH.DataStore
 {
     class ConfigurationProvider
     {

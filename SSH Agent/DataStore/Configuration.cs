@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace HelloSSH.Agent
+namespace HelloSSH.DataStore
 {
     class Configuration
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HelloSSH.DataStore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,10 @@ namespace HelloSSH.KeyManager
     internal static class TrayIcon
     {
         private static NotifyIcon icon;
-        public static void CreateTrayIcon()
+        private static SynchronizedDataStore dataStore;
+        public static void CreateTrayIcon(SynchronizedDataStore dataStore)
         {
+            TrayIcon.dataStore = dataStore;
             var contextMenu = new ContextMenuStrip();
             contextMenu.Items.Add("Open key &manager").Click += ManageButtonClick;
             contextMenu.Items.Add("&About HelloSSH").Click += AboutButtonClick;
@@ -36,7 +39,7 @@ namespace HelloSSH.KeyManager
         }
         private static void ManageButtonClick(object sender, EventArgs e)
         {
-
+            new KeyManager(dataStore).Show();
         }
     }
 }

@@ -6,9 +6,16 @@
         xmlns:local="clr-namespace:HelloSSH.KeyManager"
         mc:Ignorable="d"
         Title="KeyManager" Height="450" Width="800">
-    <Grid>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="72">
-            Hello, WPF!
-        </TextBlock>
-    </Grid>
+    <StackPanel Margin="10">
+        <TextBlock FontWeight="Light" FontSize="46">Manage SSH Keys</TextBlock>
+        <ListView Name="KeysList">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Expander Header="{Binding comment}">
+                        <TextBlock Text="{Binding PublicKeyHash}"/>
+                    </Expander>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackPanel>
 </Window>

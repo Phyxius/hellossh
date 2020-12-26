@@ -1,8 +1,10 @@
-﻿using SSHAgentFramework;
+﻿using HelloSSH.DataStore;
+using SSHAgentFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using Windows.Security.Credentials;
 using Windows.Security.Cryptography;
 
@@ -10,15 +12,27 @@ namespace HelloSSH.Agent
 {
     class HelloSSHAgent : AbstractSSHAgent
     {
-        readonly ConfigurationProvider configuration;
-        readonly List<HelloSSHKey> credentials = new List<HelloSSHKey>();
-        public HelloSSHAgent(ConfigurationProvider configurationProvider)
+        readonly SynchronizedDataStore dataStore;
+        readonly Configuration configuration;
+        readonly List<HelloSSHKey> credentials;
+        readonly ReaderWriterLockSlim lockSlim;
+        public HelloSSHAgent(SynchronizedDataStore synchronizedDataStore)
         {
-            configuration = configurationProvider;
+            dataStore = synchronizedDataStore;
+            configuration = synchronizedDataStore.ConfigurationProvider.Configuration;
+            credentials = synchronizedDataStore.Keys;
+            lockSlim = synchronizedDataStore.Lock;
             LoadOrCreateCredentials();
         }
 
         public override IAgentMessage ProcessMessage(AgentMessage message, uint clientProcessId)
+        {
+            lockSlim.EnterReadLock();
+            var ret = ProcessMessageInternal(message, clientProcessId);
+            lockSlim.ExitReadLock();
+            return ret;
+        }
+        private IAgentMessage ProcessMessageInternal(AgentMessage message, uint clientProcessId)
         {
             switch (message.Type)
             {
@@ -52,7 +66,8 @@ namespace HelloSSH.Agent
         }
         private void LoadOrCreateCredentials()
         {
-            foreach (string handle in configuration.Configuration.KeyHandles)
+            lockSlim.EnterWriteLock();
+            foreach (string handle in configuration.KeyHandles)
             {
                 var credential = LoadOrCreateCredential(handle);
                 if (credential != null)
@@ -60,6 +75,7 @@ namespace HelloSSH.Agent
                     credentials.Add(new HelloSSHKey(credential, handle));
                 }
             }
+            lockSlim.ExitWriteLock();
         }
         private KeyCredential LoadOrCreateCredential(string name)
         {
@@ -93,7 +109,11 @@ namespace HelloSSH.Agent
 
         public void ListenOnNamedPipe()
         {
-            ListenOnNamedPipe(configuration.Configuration.NamedPipeLocation);
+            lockSlim.EnterReadLock();
+            var location = configuration.NamedPipeLocation;
+            lockSlim.ExitReadLock();
+
+            ListenOnNamedPipe(location);
         }
     }
 }
