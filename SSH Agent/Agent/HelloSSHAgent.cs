@@ -12,21 +12,21 @@ namespace HelloSSH.Agent
     class HelloSSHAgent : AbstractSSHAgent
     {
         readonly ConfigurationProvider configuration;
-        List<KeyCredential> credentials = new List<KeyCredential>();
+        readonly List<HelloSSHKey> credentials = new List<HelloSSHKey>();
         public HelloSSHAgent(ConfigurationProvider configurationProvider)
         {
             configuration = configurationProvider;
             LoadOrCreateCredentials();
         }
 
-        public override IAgentMessage ProcessMessage(AgentMessage message)
+        public override IAgentMessage ProcessMessage(AgentMessage message, uint clientProcessId)
         {
             switch (message.Type)
             {
                 case AgentMessageType.SSH_AGENTC_REQUEST_IDENTITIES:
                     return new AgentIdentitiesAnswerMessage
                     {
-                        Keys = credentials.Select(cred => (GetPublicKeyFromCredential(cred), cred.Name)).ToList()
+                        Keys = credentials.Select(cred => (cred.PublicKey, cred.Comment)).ToList()
                     };
                 case AgentMessageType.SSH_AGENTC_SIGN_REQUEST:
                     var request = ClientSignRequestMessage.Deserialize(message.Contents);
@@ -35,12 +35,12 @@ namespace HelloSSH.Agent
                         return new AgentFailureMessage();
                     }
                     // the request's key blob length will get stripped out by the parser, so we tell our serializer not to include it
-                    var cred = credentials.Find(cred => GetPublicKeyFromCredential(cred).Serialize(false).SequenceEqual(request.KeyBlob));
+                    var cred = credentials.Find(cred => cred.KeyIdentifier.SequenceEqual(request.KeyBlob));
                     if (cred == null)
                     {
                         return new AgentFailureMessage();
                     }
-                    var blob = SignChallenge(cred, request.Challenge);
+                    var blob = SignChallenge(cred.Credential, request.Challenge);
                     if (blob == null) return new AgentFailureMessage();
                     return new AgentSignResponseMessage
                     {
@@ -48,7 +48,7 @@ namespace HelloSSH.Agent
                         Blob = blob
                     };
                 default:
-                    return base.ProcessMessage(message);
+                    return base.ProcessMessage(message, clientProcessId);
             }
         }
         private void LoadOrCreateCredentials()
@@ -58,7 +58,7 @@ namespace HelloSSH.Agent
                 var credential = LoadOrCreateCredential(handle);
                 if (credential != null)
                 {
-                    credentials.Add(credential);
+                    credentials.Add(new HelloSSHKey(credential, handle));
                 }
             }
         }
@@ -96,28 +96,5 @@ namespace HelloSSH.Agent
         {
             ListenOnNamedPipe(configuration.Configuration.NamedPipeLocation);
         }
-
-        //https://coolaj86.com/articles/the-ssh-public-key-format/
-        private static string PublicKeyToInterchangeFormat(KeyCredential cred)
-        {
-            //TODO: THIS IS CURRENTLY NOT CORRECT
-            return "ssh-rsa " + Convert.ToBase64String(GetPublicKeyFromCredential(cred).Serialize());
-        }
-        private static SSHPublicKey GetPublicKeyFromCredential(KeyCredential cred)
-        {
-            var publicKeyStream = cred.RetrievePublicKey(CryptographicPublicKeyBlobType.BCryptPublicKey).AsStream();
-            var header = BCryptKeyBlob.FromStream(publicKeyStream);
-            var keyData = new SSHPublicKey
-            {
-                KeyType = SSHPublicKey.KEY_TYPE_RSA,
-                ExponentOrECTypeName = new byte[header.cbPublicExp],
-                ModulusOrECPoint = new byte[header.cbModulus]
-            };
-            publicKeyStream.Read(keyData.ExponentOrECTypeName, 0, keyData.ExponentOrECTypeName.Length);
-            publicKeyStream.Read(keyData.ModulusOrECPoint, 0, keyData.ModulusOrECPoint.Length);
-
-            return keyData;
-        }
-
     }
 }
