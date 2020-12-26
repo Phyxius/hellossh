@@ -12,9 +12,9 @@ namespace HelloSSH
     class HelloSSHKey
     {
         public readonly KeyCredential Credential;
-        public readonly string Comment;
-        public readonly string PublicKeyFingerprint;
-        public readonly string PublicKeyHash;
+        public string Comment { get; private set; }
+        public string PublicKeyFingerprint { get; private set; }
+        public string PublicKeyHash { get; private set; }
         public readonly byte[] KeyIdentifier;
         public readonly SSHPublicKey PublicKey;
 

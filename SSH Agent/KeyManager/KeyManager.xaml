@@ -5,17 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HelloSSH.KeyManager"
         mc:Ignorable="d"
-        Title="KeyManager" Height="450" Width="800">
-    <StackPanel Margin="10">
-        <TextBlock FontWeight="Light" FontSize="46">Manage SSH Keys</TextBlock>
+        Title="Key Manager" MinHeight="450" MinWidth="600" Height="450" Width="600">
+    <DockPanel Margin="10">
+        <TextBlock FontWeight="Light" FontSize="46" DockPanel.Dock="Top" Margin="0,0,0,10">Manage SSH Keys</TextBlock>
         <ListView Name="KeysList">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Expander Header="{Binding comment}">
-                        <TextBlock Text="{Binding PublicKeyHash}"/>
-                    </Expander>
+                    <TextBlock FontSize="14">
+                        <TextBlock.Inlines>
+                            <Run FontSize="24" FontWeight="Light" Text="{Binding Path=Comment, Mode=OneWay}"/>
+                            <LineBreak/>
+                            <Run Text="{Binding Path=PublicKeyHash, Mode=OneWay}"/>
+                        </TextBlock.Inlines>
+                    </TextBlock>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-    </StackPanel>
+    </DockPanel>
 </Window>
