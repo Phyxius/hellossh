@@ -34,7 +34,7 @@ namespace HelloSSH
                 .Concat(WireUtils.EncodeToMPInt(publicKey.ExponentOrECTypeName))
                 .Concat(WireUtils.EncodeToMPInt(publicKey.ModulusOrECPoint))
                 .ToArray();
-            return publicKey.KeyType + " " + Convert.ToBase64String(fpBytes) + " " + comment;
+            return $"{publicKey.KeyType} {Convert.ToBase64String(fpBytes)} {comment}";
         }
         private static SSHPublicKey GetPublicKeyFromCredential(KeyCredential cred)
         {
