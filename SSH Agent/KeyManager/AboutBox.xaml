@@ -65,7 +65,16 @@
                 <Run FontWeight="Light" FontSize="24">Copyright</Run>
                 <LineBreak/>
                 <Run>
-                    HelloSSH is (C) 2020 Shea Polansky. This software is licensed under the MIT license. Source code and the full text of the license is available on
+                    HelloSSH is (C) 2020
+                </Run>
+                <Hyperlink
+                    NavigateUri="https://polansky.co"
+                    RequestNavigate="OpenHyperlink"
+                    >
+                    Shea Polansky.
+                </Hyperlink>
+                <Run>
+                    This software is licensed under the MIT license. Source code and the full text of the license is available on
                 </Run>
                 <Hyperlink
                     NavigateUri="https://github.com/phyxius"
