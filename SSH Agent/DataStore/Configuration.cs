@@ -18,6 +18,8 @@ namespace HelloSSH.DataStore
         public List<string> KeyHandles { get; set; }
         public string NamedPipeLocation { get; set; }
 
+        public bool UseCredentialDialogForegroundHack { get; set; }
+
         public string Serialize() => JsonSerializer.Serialize(this, options);
 
         public static Configuration Deserialize(string json)
@@ -38,7 +40,8 @@ namespace HelloSSH.DataStore
         {
             Version = MAX_COMPATIBLE_VERSION,
             KeyHandles = new List<string>(),
-            NamedPipeLocation = "hellossh"
+            NamedPipeLocation = "hellossh",
+            UseCredentialDialogForegroundHack = true
         };
     }
 }

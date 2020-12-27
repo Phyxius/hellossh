@@ -6,13 +6,14 @@ using System.Drawing;
 using HelloSSH.KeyManager;
 using HelloSSH.DataStore;
 using Windows.Security.Credentials;
+using System.Windows.Automation;
 
 namespace HelloSSH
 {
     partial class Program : System.Windows.Application
     {
         const string DefaultConfigLocation = "helossh.json";
-        private static Mutex singleInstanceMutex; 
+        private static Mutex singleInstanceMutex;
         private void PrintUsageAndExit()
         {
             MessageBox.Show(null, @"Usage: heloossh.exe [C:\path\to\config.json]", "Usage", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -94,6 +95,16 @@ namespace HelloSSH
             agentThread.Start();
             TrayIcon.CreateTrayIcon(dataStore);
             agent.PrivateKeyRequested += TrayIcon.NotifyKeyUsed;
+            if (dataStore.ConfigurationProvider.Configuration.UseCredentialDialogForegroundHack)
+            {
+                RegisterWindowHandler();
+            }
+        }
+
+        protected override void OnExit(System.Windows.ExitEventArgs e)
+        {
+            Automation.RemoveAllEventHandlers();
+            base.OnExit(e);
         }
 
         private void ShowWelcome(SynchronizedDataStore dataStore)
@@ -137,6 +148,23 @@ namespace HelloSSH
                     });
                 }
             }
+        }
+        public static void RegisterWindowHandler()
+        {
+            Automation.AddAutomationEventHandler(
+                WindowPattern.WindowOpenedEvent,
+                AutomationElement.RootElement,
+                TreeScope.Children,
+                (sender, e) =>
+                {
+                    var element = sender as AutomationElement;
+                    if (element.Current.ClassName != "Credential Dialog XAML Host")
+                    {
+                        return;
+                    }
+                    Util.SetForegroundWindow(new IntPtr(element.Current.NativeWindowHandle));
+                }
+            );
         }
     }
 }
