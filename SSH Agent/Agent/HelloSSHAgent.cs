@@ -2,6 +2,7 @@
 using SSHAgentFramework;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace HelloSSH.Agent
     {
         readonly SynchronizedDataStore dataStore;
         readonly Configuration configuration;
-        readonly List<HelloSSHKey> credentials;
+        readonly ObservableCollection<HelloSSHKey> credentials;
         readonly ReaderWriterLockSlim lockSlim;
         public HelloSSHAgent(SynchronizedDataStore synchronizedDataStore)
         {
@@ -48,7 +49,7 @@ namespace HelloSSH.Agent
                         return new AgentFailureMessage();
                     }
                     // the request's key blob length will get stripped out by the parser, so we tell our serializer not to include it
-                    var cred = credentials.Find(cred => cred.KeyIdentifier.SequenceEqual(request.KeyBlob));
+                    var cred = credentials.ToList().Find(cred => cred.KeyIdentifier.SequenceEqual(request.KeyBlob));
                     if (cred == null)
                     {
                         return new AgentFailureMessage();

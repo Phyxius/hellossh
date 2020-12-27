@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -10,13 +11,13 @@ namespace HelloSSH.DataStore
     internal class SynchronizedDataStore
     {
         public readonly ConfigurationProvider ConfigurationProvider;
-        public readonly List<HelloSSHKey> Keys;
+        public readonly ObservableCollection<HelloSSHKey> Keys;
         public readonly ReaderWriterLockSlim Lock;
 
         public SynchronizedDataStore(ConfigurationProvider configurationProvider)
         {
             ConfigurationProvider = configurationProvider;
-            Keys = new List<HelloSSHKey>();
+            Keys = new ObservableCollection<HelloSSHKey>();
             Lock = new ReaderWriterLockSlim();
         }
 
@@ -47,6 +48,16 @@ namespace HelloSSH.DataStore
             ConfigurationProvider.Save();
             Lock.ExitWriteLock();
             return true;
+        }
+
+        public void RemoveKey(string name)
+        {
+            Lock.EnterWriteLock();
+            KeyCredentialManager.DeleteAsync(name).AsTask().Wait();
+            Keys.Remove(Keys.ToList().Find(k => k.Comment == name));
+            ConfigurationProvider.Configuration.KeyHandles.Remove(name);
+            ConfigurationProvider.Save();
+            Lock.ExitWriteLock();
         }
         private static KeyCredential LoadOrCreateCredential(string name)
         {

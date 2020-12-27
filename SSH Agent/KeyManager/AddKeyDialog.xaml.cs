@@ -19,9 +19,44 @@ namespace HelloSSH.KeyManager
     /// </summary>
     public partial class AddKeyDialog : Window
     {
+        bool canceled = true;
+        HashSet<string> existingKeyNames;
         public AddKeyDialog()
         {
             InitializeComponent();
+        }
+
+        void Cancel(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        void CreateKey(object sender, EventArgs e)
+        {
+            canceled = false;
+            Close();
+        }
+
+        public static string ShowCreateKeyDialog(Window owner, IEnumerable<string> existingKeyNames)
+        {
+            var dialog = new AddKeyDialog
+            {
+                Owner = owner,
+                existingKeyNames = new HashSet<string>(existingKeyNames)
+            };
+            dialog.existingKeyNames.Add("");
+            dialog.ShowDialog();
+            if (dialog.canceled)
+            {
+                return null;
+            }
+
+            return dialog.KeyNameInput.Text.Trim();
+        }
+
+        private void KeyNameInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CreateKeyButton.IsEnabled = !existingKeyNames.Contains(KeyNameInput.Text.Trim());
         }
     }
 }
