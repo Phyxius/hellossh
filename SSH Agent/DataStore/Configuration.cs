@@ -36,7 +36,7 @@ namespace HelloSSH.DataStore
         public static Configuration DefaultSettings => new Configuration
         {
             Version = MAX_COMPATIBLE_VERSION,
-            KeyHandles = new List<string>(new string[] { Environment.MachineName.ToLower() + "-hellossh" }),
+            KeyHandles = new List<string>(new string[] { $"{Environment.UserName}@{Environment.MachineName}-hellossh".ToLower() }),
             NamedPipeLocation = "hellossh"
         };
     }
