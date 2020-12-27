@@ -59,6 +59,14 @@ namespace HelloSSH.DataStore
             ConfigurationProvider.Save();
             Lock.ExitWriteLock();
         }
+
+        public string GetAuthorizedKeysFile()
+        {
+            Lock.EnterReadLock();
+            var text = string.Join("\n", Keys.Select(k => k.PublicKeyFingerprint));
+            Lock.ExitReadLock();
+            return text;
+        }
         private static KeyCredential LoadOrCreateCredential(string name)
         {
             var resultTask = KeyCredentialManager.RequestCreateAsync(name, KeyCredentialCreationOption.FailIfExists).AsTask();

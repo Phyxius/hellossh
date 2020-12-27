@@ -49,10 +49,6 @@ namespace HelloSSH.KeyManager
             keyManager.Show();
         }
 
-        private void UpdateKeysList()
-        {
-            //KeysList.GetBindingExpression(ListView.ItemsSourceProperty).UpdateSource();
-        }
         private void NewKey_Click(object sender, RoutedEventArgs e)
         {
             var newKeyName = 
@@ -63,7 +59,6 @@ namespace HelloSSH.KeyManager
             }
 
             dataStore.AddKey(newKeyName);
-            UpdateKeysList();
         }
 
         private void RemoveKey_Click(object sender, RoutedEventArgs e)
@@ -86,7 +81,27 @@ namespace HelloSSH.KeyManager
                 return;
             }
             dataStore.RemoveKey(keyName);
-            UpdateKeysList();
+        }
+        
+        private void Copy_Click(object sender, RoutedEventArgs e)
+        {
+            var menu = FindResource("CopyContextMenu") as ContextMenu;
+            menu.DataContext = KeysList;
+            menu.PlacementTarget = (UIElement)sender;
+            menu.IsOpen = true;
+        }
+        private void CopyHash_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Clipboard.SetText((KeysList.SelectedItem as HelloSSHKey).PublicKeyHash);
+        }
+
+        private void CopyFingerprint_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Clipboard.SetText((KeysList.SelectedItem as HelloSSHKey).PublicKeyFingerprint);
+        }
+        private void CopyAuthorizedKeys_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Clipboard.SetText(string.Join("\n", dataStore.Keys.Select(k => k.PublicKeyFingerprint)));
         }
     }
 }

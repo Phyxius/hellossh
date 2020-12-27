@@ -10,6 +10,12 @@
     <Window.Resources>
         <ResourceDictionary>
             <local:SelectionEnabledValueConverter x:Key="SelectionEnabledValueConverter"/>
+            <ContextMenu x:Key="CopyContextMenu">
+                <MenuItem Header="Copy _authorized_keys file" Click="CopyAuthorizedKeys_Click"/>
+                <Separator/>
+                <MenuItem Header="Copy _selected key fingerprint" Click="CopyFingerprint_Click" IsEnabled="{Binding Path=SelectedIndex, Converter={StaticResource SelectionEnabledValueConverter}}"/>
+                <MenuItem Header="Copy _selected hey hash" Click="CopyHash_Click" IsEnabled="{Binding Path=SelectedIndex, Converter={StaticResource SelectionEnabledValueConverter}}"/>
+            </ContextMenu>
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel Margin="10">
@@ -33,10 +39,16 @@
                 </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0,10,0,0">
+                <Button Click="Copy_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource Copy}" Height="16"/>
+                        <TextBlock VerticalAlignment="Center">Copy&#8230;</TextBlock>
+                    </StackPanel>
+                </Button>
                 <Button Margin="0" Click="NewKey_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource NewKey}" Height="16"/>
-                        <TextBlock VerticalAlignment="Center">New Key...</TextBlock>
+                        <TextBlock VerticalAlignment="Center">Create New Key</TextBlock>
                     </StackPanel>
                 </Button>
             </StackPanel>
