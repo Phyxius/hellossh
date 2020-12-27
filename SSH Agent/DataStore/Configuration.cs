@@ -8,6 +8,7 @@ namespace HelloSSH.DataStore
     {
         const decimal VERSION_ONE = 1.0M;
         const decimal MIN_COMPATIBLE_VERSION = VERSION_ONE, MAX_COMPATIBLE_VERSION = VERSION_ONE;
+        public static readonly string DEFAULT_KEY_NAME = $"{Environment.UserName}@{Environment.MachineName}-hellossh".ToLower();
         private readonly JsonSerializerOptions options = new JsonSerializerOptions
         {
             WriteIndented = true
@@ -36,7 +37,7 @@ namespace HelloSSH.DataStore
         public static Configuration DefaultSettings => new Configuration
         {
             Version = MAX_COMPATIBLE_VERSION,
-            KeyHandles = new List<string>(new string[] { $"{Environment.UserName}@{Environment.MachineName}-hellossh".ToLower() }),
+            KeyHandles = new List<string>(),
             NamedPipeLocation = "hellossh"
         };
     }

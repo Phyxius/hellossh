@@ -12,17 +12,19 @@ namespace HelloSSH.DataStore
 
         private readonly string configurationFilePath;
 
-        public ConfigurationProvider(string configurationFilePath)
+        public ConfigurationProvider(string configurationFilePath, out bool defaultSettingsCreated)
         {
             this.configurationFilePath = configurationFilePath;
             if (File.Exists(configurationFilePath))
             {
                 Load();
+                defaultSettingsCreated = false;
             }
             else
             {
                 Configuration = Configuration.DefaultSettings;
                 Save();
+                defaultSettingsCreated = true;
             }
         }
 

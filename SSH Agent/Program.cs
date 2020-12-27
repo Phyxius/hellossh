@@ -81,8 +81,12 @@ namespace HelloSSH
                 ShowNoHelloErrorAndExit();
                 return;
             }
-            var dataStore = new SynchronizedDataStore(new ConfigurationProvider(configLocation));
+            var dataStore = new SynchronizedDataStore(new ConfigurationProvider(configLocation, out var defaultConfigCreated));
             var agent = new HelloSSHAgent(dataStore);
+            if (defaultConfigCreated)
+            {
+                ShowWelcome(dataStore);
+            }
             Thread agentThread = new Thread(agent.ListenOnNamedPipe)
             {
                 IsBackground = true
@@ -90,6 +94,49 @@ namespace HelloSSH
             agentThread.Start();
             TrayIcon.CreateTrayIcon(dataStore);
             agent.PrivateKeyRequested += TrayIcon.NotifyKeyUsed;
+        }
+
+        private void ShowWelcome(SynchronizedDataStore dataStore)
+        {
+            var yesButton = new TaskDialogCommandLinkButton("Yes", $"A key with the name \"{Configuration.DEFAULT_KEY_NAME}\" will be created. You will be asked to confirm your identity with Windows Hello.");
+            var choice = TaskDialog.ShowDialog(new TaskDialogPage
+            {
+                Icon = TaskDialogIcon.Information,
+                Caption = "Welcome to HelloSSH",
+                Heading = "Welcome",
+                Text = "It looks like this is your first time running HelloSSH. Would you like to create a key with the default settings?",
+                Buttons =
+                {
+                    yesButton,
+                    new TaskDialogCommandLinkButton("No", "No keys will be created. You can create one later by double-clicking on the HelloSSH icon in the notification tray.")
+                }
+            });
+            if (choice == yesButton)
+            {
+                var keyCreated = false;
+                while (!(keyCreated = dataStore.AddKey(Configuration.DEFAULT_KEY_NAME))
+                    && (TaskDialog.ShowDialog(new TaskDialogPage
+                    {
+                        Icon = TaskDialogIcon.Error,
+                        Caption = "Error creating key",
+                        Heading = "Error creating key",
+                        Text = "There was an error creating the key. This might have been because you pressed Cancel on the Windows Hello dialog, or because of a system error. Would you like to try again?",
+                        Buttons =
+                        {
+                            TaskDialogButton.Yes,
+                            TaskDialogButton.No
+                        }
+                    }) == TaskDialogButton.Yes)) ;
+                if (keyCreated)
+                {
+                    TaskDialog.ShowDialog(new TaskDialogPage
+                    {
+                        Caption = "Successfully created key",
+                        Heading = "Success",
+                        Text = "The key was successfully created. You can now use it as an SSH key. If you haven't already, see the README for more information on how to use HelloSSH."
+                    });
+                }
+            }
         }
     }
 }
