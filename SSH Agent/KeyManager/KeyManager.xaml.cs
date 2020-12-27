@@ -46,5 +46,10 @@ namespace HelloSSH.KeyManager
             keyManager = new KeyManager(dataStore);
             keyManager.Show();
         }
+
+        private void NewKey_Click(object sender, RoutedEventArgs e)
+        {
+            new AddKeyDialog { Owner = this }.ShowDialog();
+        }
     }
 }

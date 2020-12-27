@@ -1,0 +1,67 @@
+﻿<Window x:Class="HelloSSH.KeyManager.AddKeyDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HelloSSH.KeyManager"
+        mc:Ignorable="d"
+        Title="Create New Key" Height="300" Width="340" ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HelloSSH;component/KeyManager/Icon.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <local:SelectionEnabledValueConverter x:Key="SelectionEnabledValueConverter"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel Margin="10,0,10,10">
+        <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+            <Button DockPanel.Dock="Left" Padding="3">Cancel</Button>
+            <Button DockPanel.Dock="Right" Padding="3">Create</Button>
+        </DockPanel>
+        <StackPanel>
+            <TextBlock Text="Create new key&#8230;" FontWeight="Light" FontSize="34"/>
+            <GroupBox Header="Key Properties" Padding="3">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Key type:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="0,0,0,3"/>
+                    <ComboBox IsEnabled="False" Grid.Column="1" Grid.Row="0" Margin="0,0,0,3">
+                        <ComboBoxItem IsSelected="True">
+                            <TextBlock Text="RSA"></TextBlock>
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Text="Key size:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="0,0,0,3"/>
+                    <ComboBox IsEnabled="False" Grid.Column="1" Grid.Row="1" Margin="0,0,0,3">
+                        <ComboBoxItem IsSelected="True">
+                            <TextBlock Text="2048 bits"></TextBlock>
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Text="Key store:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="0,0,0,3"/>
+                    <ComboBox IsEnabled="False" Grid.Column="1" Grid.Row="2" Margin="0,0,0,3">
+                        <ComboBoxItem IsSelected="True">
+                            <TextBlock Text="Windows Hello"></TextBlock>
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Image Source="{StaticResource Information}" Height="16" Width="16" Margin="0,0,5,0"/>
+                        <TextBlock VerticalAlignment="Center" TextWrapping="Wrap" Width="270">
+                        These parameters were set by Microsoft when the Passport API was created and cannot be changed.
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Key Name" Padding="3">
+                <TextBox x:Name="KeyNameInput"></TextBox>
+            </GroupBox>
+        </StackPanel>
+    </DockPanel>
+</Window>

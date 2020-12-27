@@ -22,7 +22,7 @@ namespace HelloSSH.Agent
             configuration = synchronizedDataStore.ConfigurationProvider.Configuration;
             credentials = synchronizedDataStore.Keys;
             lockSlim = synchronizedDataStore.Lock;
-            LoadOrCreateCredentials();
+            dataStore.LoadOrCreateCredentials();
         }
 
         public override IAgentMessage ProcessMessage(AgentMessage message, uint clientProcessId)
@@ -53,7 +53,7 @@ namespace HelloSSH.Agent
                     {
                         return new AgentFailureMessage();
                     }
-                    var blob = SignChallenge(cred.Credential, request.Challenge);
+                    var blob = cred.SignChallenge(request.Challenge);
                     if (blob == null) return new AgentFailureMessage();
                     return new AgentSignResponseMessage
                     {
@@ -63,48 +63,6 @@ namespace HelloSSH.Agent
                 default:
                     return base.ProcessMessage(message, clientProcessId);
             }
-        }
-        private void LoadOrCreateCredentials()
-        {
-            lockSlim.EnterWriteLock();
-            foreach (string handle in configuration.KeyHandles)
-            {
-                var credential = LoadOrCreateCredential(handle);
-                if (credential != null)
-                {
-                    credentials.Add(new HelloSSHKey(credential, handle));
-                }
-            }
-            lockSlim.ExitWriteLock();
-        }
-        private KeyCredential LoadOrCreateCredential(string name)
-        {
-            var resultTask = KeyCredentialManager.RequestCreateAsync(name, KeyCredentialCreationOption.FailIfExists).AsTask();
-            resultTask.Wait();
-            var result = resultTask.Result;
-            switch (result.Status)
-            {
-                case KeyCredentialStatus.Success:
-                    return result.Credential;
-                case KeyCredentialStatus.CredentialAlreadyExists:
-                    var openTask = KeyCredentialManager.OpenAsync(name).AsTask();
-                    openTask.Wait();
-                    return openTask.Result.Credential;
-                case KeyCredentialStatus.UserCanceled:
-                case KeyCredentialStatus.UserPrefersPassword:
-                    Console.WriteLine("You canceled creating a key! Continuing...");
-                    return null;
-                default:
-                    throw new Exception(result.Status.ToString());
-            }
-        }
-
-        private byte[] SignChallenge(KeyCredential credential, byte[] challenge)
-        {
-            var task = credential.RequestSignAsync(CryptographicBuffer.CreateFromByteArray(challenge)).AsTask();
-            task.Wait();
-            var result = task.Result;
-            return result.Result?.ToArray();
         }
 
         public void ListenOnNamedPipe()

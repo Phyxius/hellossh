@@ -60,4 +60,15 @@
             </DrawingGroup>
         </DrawingImage.Drawing>
     </DrawingImage>
+    <DrawingImage x:Key="Information">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M0,8C0,3.582 3.582,0 8,0 12.418,0 16,3.582 16,8 16,12.418 12.418,16 8,16 3.582,16 0,12.418 0,8" />
+                    <GeometryDrawing Brush="#FF848484" Geometry="F1M9,5L7,5 7,3 9,3z M9,13L7,13 7,6 9,6z M8,1C4.135,1 1,4.134 1,8 1,11.865 4.135,15 8,15 11.865,15 15,11.865 15,8 15,4.134 11.865,1 8,1" />
+                    <GeometryDrawing Brush="#FFF0EFF1" Geometry="F1M9,3L7,3 7,5 9,5z M9,13L7,13 7,6 9,6z" />
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
 </ResourceDictionary>

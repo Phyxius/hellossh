@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Security.Credentials;
 using Windows.Security.Cryptography.Core;
 using System.Security.Cryptography;
+using Windows.Security.Cryptography;
 
 namespace HelloSSH
 {
@@ -63,6 +64,13 @@ namespace HelloSSH
             publicKeyStream.Read(keyData.ModulusOrECPoint, 0, keyData.ModulusOrECPoint.Length);
 
             return keyData;
+        }
+        public byte[] SignChallenge(byte[] challenge)
+        {
+            var task = Credential.RequestSignAsync(CryptographicBuffer.CreateFromByteArray(challenge)).AsTask();
+            task.Wait();
+            var result = task.Result;
+            return result.Result?.ToArray();
         }
     }
 }

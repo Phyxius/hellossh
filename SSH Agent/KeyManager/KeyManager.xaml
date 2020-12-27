@@ -11,7 +11,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/HelloSSH;component/KeyManager/Icon.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
             <local:SelectionEnabledValueConverter x:Key="SelectionEnabledValueConverter"/>
         </ResourceDictionary>
     </Window.Resources>
@@ -36,7 +35,7 @@
                 </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0,10,0,0">
-                <Button Margin="0">
+                <Button Margin="0" Click="NewKey_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource NewKey}" Height="16"/>
                         <TextBlock VerticalAlignment="Center">New Key...</TextBlock>
