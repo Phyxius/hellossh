@@ -21,6 +21,7 @@ namespace HelloSSH.KeyManager
     /// </summary>
     public partial class AboutBox : Window
     {
+        private static AboutBox aboutBox;
         public AboutBox()
         {
             InitializeComponent();
@@ -32,12 +33,23 @@ namespace HelloSSH.KeyManager
             Util.OpenURI(e.Uri);
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            aboutBox = null;
+            base.OnClosed(e);
+        }
         public static void Show(Window owner = null)
         {
-            new AboutBox
+            if (aboutBox != null)
+            {
+                aboutBox.Activate();
+                return;
+            }
+            aboutBox = new AboutBox
             {
                 Owner = owner
-            }.ShowDialog();
+            };
+            aboutBox.ShowDialog();
         }
     }
 }

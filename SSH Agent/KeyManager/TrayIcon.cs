@@ -12,6 +12,7 @@ namespace HelloSSH.KeyManager
     {
         private static NotifyIcon icon;
         private static SynchronizedDataStore dataStore;
+        private static KeyManager keyManager;
         public static void CreateTrayIcon(SynchronizedDataStore dataStore)
         {
             TrayIcon.dataStore = dataStore;
@@ -26,6 +27,8 @@ namespace HelloSSH.KeyManager
                 Text = "HelloSSH",
                 ContextMenuStrip = contextMenu
             };
+            icon.DoubleClick += ManageButtonClick;
+            keyManager = new KeyManager(dataStore);
         }
 
         private static void ExitButtonClick(object sender, EventArgs e)
@@ -39,7 +42,7 @@ namespace HelloSSH.KeyManager
         }
         private static void ManageButtonClick(object sender, EventArgs e)
         {
-            new KeyManager(dataStore).Show();
+            keyManager.Show();
         }
     }
 }

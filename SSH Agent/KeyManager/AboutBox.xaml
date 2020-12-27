@@ -6,39 +6,19 @@
         xmlns:local="clr-namespace:HelloSSH.KeyManager"
         mc:Ignorable="d"
         Title="About HelloSSH" Width="800" Height="320" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HelloSSH;component/KeyManager/Icon.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="256"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Image Grid.Column="0">
-            <Image.Source>
-                <!-- Generated via https://github.com/BerndK/SvgToXaml -->
-                <DrawingImage>
-                    <DrawingImage.Drawing>
-                        <DrawingGroup ClipGeometry="M0,0 V100.01939 H100.01939 V0 H0 Z">
-                            <DrawingGroup.Transform>
-                                <TranslateTransform X="2.2690590725793491E-12" Y="2.9903" />
-                            </DrawingGroup.Transform>
-                            <DrawingGroup Opacity="1" Transform="1,0,0,1,-12.1553,3.4806071">
-                                <DrawingGroup Opacity="1" Transform="1,0,0,1,11.165001,-0.49030696">
-                                    <GeometryDrawing Brush="#FF000055">
-                                        <GeometryDrawing.Geometry>
-                                            <RectangleGeometry RadiusX="0" RadiusY="0" Rect="0.9903,-2.9903,100.0194,100.0194" />
-                                        </GeometryDrawing.Geometry>
-                                    </GeometryDrawing>
-                                    <DrawingGroup Opacity="1" Transform="1,0,0,1,12.664992,-1.9903024">
-                                        <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M100.01939,100.01939z M0,0z M47.5,-3.100586E-06A2.5,2.5,0,0,0,47.5,4.9999968A24.18,24.18,0,0,1,71.65,29.159996L71.65,36.349996A18.83,18.83,0,0,1,60.33,53.589996A2.5,2.5,0,0,0,58.83,55.889996L58.9,86.259996 52.81,92.379996 46.73,86.279996 46.73,84.089996 47.11,83.689996 51.01,79.779996A3.15,3.15,0,0,0,51.01,75.329996L47.73,72.059996 51,68.779996A3.15,3.15,0,0,0,51,64.339996L47.08,60.439996 46.75,60.079996 46.75,55.849996A2.5,2.5,0,0,0,45.26,53.559996A18.84,18.84,0,0,1,34.02,36.349996L34.02,29.129996A13.5,13.5,0,0,1,61.02,29.129996L61.02,36.299996A8.16,8.16,0,0,1,44.7,36.299996L44.7,29.129996A2.83,2.83,0,0,1,50.36,29.129996L50.36,36.299996A2.5,2.5,0,1,0,55.36,36.299996L55.36,29.129996A7.83,7.83,0,0,0,39.7,29.129996L39.7,36.299996A13.16,13.16,0,0,0,66.02,36.299996L66.02,29.129996A18.5,18.5,0,0,0,29.02,29.129996L29.02,36.339996A23.84,23.84,0,0,0,41.73,57.419996L41.73,60.999996A2.5,2.5,0,0,0,42.33,62.629996C42.47,62.789996,43.16,63.629996,43.54,63.969996L46.14,66.559996 43.98,68.729996A4.72,4.72,0,0,0,43.98,75.399996L46.15,77.559996 43.57,80.149996C43.23,80.499996,42.33,81.449996,42.33,81.449996A2.49,2.49,0,0,0,41.69,83.129996L41.69,86.719996A3.92,3.92,0,0,0,42.85,89.509996L50.4,96.999996A3.49,3.49,0,0,0,55.33,96.999996L62.81,89.489996A3.92,3.92,0,0,0,63.96,86.699996L63.9,57.469996A23.83,23.83,0,0,0,76.67,36.369996L76.67,29.159996A29.19,29.19,0,0,0,47.5,-3.100586E-06z" />
-                                        <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M100.01939,100.01939z M0,0z M29.63,69.879996L29.12,69.879996 29.12,62.999996A10.28,10.28,0,0,0,18.85,52.689996L17.2,52.689996A10.28,10.28,0,0,0,6.93,62.999996L6.93,69.919996 6.42,69.919996A6.42,6.42,0,0,0,0,76.339996L0,89.999996A6.42,6.42,0,0,0,6.42,96.419996L29.63,96.419996A6.42,6.42,0,0,0,36.05,89.999996L36.05,76.289996A6.42,6.42,0,0,0,29.63,69.879996z M11.93,62.999996A5.28,5.28,0,0,1,17.2,57.729996L18.85,57.729996A5.28,5.28,0,0,1,24.12,62.999996L24.12,69.919996 11.93,69.919996z M31.05,89.999996A1.42,1.42,0,0,1,29.63,91.419996L6.42,91.419996A1.42,1.42,0,0,1,5.01,89.999996L5.01,76.289996A1.42,1.42,0,0,1,6.43,74.869996L29.63,74.869996A1.42,1.42,0,0,1,31.05,76.289996z" />
-                                        <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M100.01939,100.01939z M0,0z M18.02,80.629996A2.5,2.5,0,0,0,18.02,85.629996L18.02,85.629996A2.5,2.5,0,0,0,18.02,80.629996z" />
-                                    </DrawingGroup>
-                                </DrawingGroup>
-                            </DrawingGroup>
-                        </DrawingGroup>
-                    </DrawingImage.Drawing>
-                </DrawingImage>
-            </Image.Source>
-        </Image>
+        <Image Grid.Column="0" Source="{StaticResource ResourceKey=Icon}"/>
         <TextBlock Grid.Column="1" FontSize="14" TextWrapping="Wrap" Margin="10,0,0,0">
             <TextBlock.Inlines>
                 <Run FontSize="46" FontWeight="Light">About HelloSSH</Run>
