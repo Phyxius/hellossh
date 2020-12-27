@@ -6,14 +6,6 @@
         xmlns:local="clr-namespace:HelloSSH.KeyManager"
         mc:Ignorable="d"
         Title="Create New Key" Height="300" Width="340" ResizeMode="NoResize">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HelloSSH;component/KeyManager/Icon.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-            <local:SelectionEnabledValueConverter x:Key="SelectionEnabledValueConverter"/>
-        </ResourceDictionary>
-    </Window.Resources>
     <DockPanel Margin="10,0,10,10">
         <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
             <Button DockPanel.Dock="Left" Padding="3">Cancel</Button>

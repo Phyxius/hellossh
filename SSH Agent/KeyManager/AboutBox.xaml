@@ -6,19 +6,12 @@
         xmlns:local="clr-namespace:HelloSSH.KeyManager"
         mc:Ignorable="d"
         Title="About HelloSSH" Width="800" Height="320" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HelloSSH;component/KeyManager/Icon.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="256"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Image Grid.Column="0" Source="{StaticResource ResourceKey=Icon}"/>
+        <Image Grid.Column="0" Source="{StaticResource Icon}"/>
         <TextBlock Grid.Column="1" FontSize="14" TextWrapping="Wrap" Margin="10,0,0,0">
             <TextBlock.Inlines>
                 <Run FontSize="46" FontWeight="Light">About HelloSSH</Run>

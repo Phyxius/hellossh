@@ -8,9 +8,6 @@
         Title="Key Manager" MinHeight="450" MinWidth="600" Height="450" Width="600">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HelloSSH;component/KeyManager/Icon.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
             <local:SelectionEnabledValueConverter x:Key="SelectionEnabledValueConverter"/>
         </ResourceDictionary>
     </Window.Resources>

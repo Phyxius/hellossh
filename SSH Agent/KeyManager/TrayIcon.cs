@@ -32,7 +32,7 @@ namespace HelloSSH.KeyManager
         private static void ExitButtonClick(object sender, EventArgs e)
         {
             icon.Visible = false;
-            Application.Exit();
+            System.Windows.Application.Current.Shutdown();
         }
         private static void AboutButtonClick(object sender, EventArgs e)
         {
