@@ -6,21 +6,57 @@
         xmlns:local="clr-namespace:HelloSSH.KeyManager"
         mc:Ignorable="d"
         Title="Key Manager" MinHeight="450" MinWidth="600" Height="450" Width="600">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HelloSSH;component/KeyManager/Icon.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <local:SelectionEnabledValueConverter x:Key="SelectionEnabledValueConverter"/>
+        </ResourceDictionary>
+    </Window.Resources>
     <DockPanel Margin="10">
         <TextBlock FontWeight="Light" FontSize="46" DockPanel.Dock="Top" Margin="0,0,0,10">Manage SSH Keys</TextBlock>
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Margin="0,10,0,0">
-            <Button Content="Add" Height="24"></Button>
-        </StackPanel>
+        <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+            <DockPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="0,0,10,0"/>
+                    <Setter Property="Padding" Value="3"/>
+                </Style>
+                <Style TargetType="Image">
+                    <Setter Property="Margin" Value="0,0,2,0"/>
+                </Style>
+            </DockPanel.Resources>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Margin="0,10,0,0">
+                <Button IsEnabled="{Binding ElementName=KeysList, Path=SelectedIndex, Converter={StaticResource SelectionEnabledValueConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource Remove}" Width="16"/>
+                        <TextBlock VerticalAlignment="Center">Remove Key</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0,10,0,0">
+                <Button Margin="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource NewKey}" Height="16"/>
+                        <TextBlock VerticalAlignment="Center">New Key...</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </DockPanel>
         <ListView Name="KeysList">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock FontSize="14">
-                        <TextBlock.Inlines>
-                            <Run FontSize="24" FontWeight="Light" Text="{Binding Path=Comment, Mode=OneWay}"/>
-                            <LineBreak/>
-                            <Run FontFamily="Consolas"  Text="{Binding Path=PublicKeyHash, Mode=OneWay}"/>
-                        </TextBlock.Inlines>
-                    </TextBlock>
+                    <DockPanel>
+                        <Image Source="{StaticResource KeyDown}" Height="32" DockPanel.Dock="Left"/>
+                        <TextBlock FontSize="14">
+                            <TextBlock.Inlines>
+                                <Run FontSize="24" FontWeight="Light" Text="{Binding Path=Comment, Mode=OneWay}"/>
+                                <LineBreak/>
+                                <Run FontFamily="Consolas" Text="{Binding Path=PublicKeyHash, Mode=OneWay}"/>
+                            </TextBlock.Inlines>
+                        </TextBlock>
+                    </DockPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

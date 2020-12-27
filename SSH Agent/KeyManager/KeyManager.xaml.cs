@@ -20,12 +20,31 @@ namespace HelloSSH.KeyManager
     /// </summary>
     public partial class KeyManager : Window
     {
+        private static KeyManager keyManager;
         private readonly SynchronizedDataStore dataStore;
         internal KeyManager(SynchronizedDataStore dataStore)
         {
             this.dataStore = dataStore;
             InitializeComponent();
             KeysList.ItemsSource = dataStore.Keys;
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            keyManager = null;
+            base.OnClosed(e);
+        }
+
+        internal static void Show(SynchronizedDataStore dataStore)
+        {
+            if (keyManager != null)
+            {
+                keyManager.Activate();
+                return;
+            }
+
+            keyManager = new KeyManager(dataStore);
+            keyManager.Show();
         }
     }
 }
