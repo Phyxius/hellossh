@@ -12,11 +12,47 @@ namespace HelloSSH
     partial class Program : System.Windows.Application
     {
         const string DefaultConfigLocation = "helossh.json";
-
-        private static void PrintUsageAndExit()
+        private static Mutex singleInstanceMutex; 
+        private void PrintUsageAndExit()
         {
             MessageBox.Show(null, @"Usage: heloossh.exe [C:\path\to\config.json]", "Usage", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Application.Exit();
+            Shutdown();
+        }
+
+        private void ShowNoHelloErrorAndExit()
+        {
+            var page = new TaskDialogPage
+            {
+                Heading = "Windows Hello is Unavailable",
+                Icon = TaskDialogIcon.Error,
+                Text = "Windows Hello appears to be unavailable. This is probably because you haven't enabled it. Would you like help enabling it?",
+                Buttons =
+                    {
+                        TaskDialogButton.Yes,
+                        TaskDialogButton.No
+                    }
+            };
+            if (TaskDialog.ShowDialog(page) == TaskDialogButton.Yes)
+            {
+                Util.OpenURI(new Uri("https://support.microsoft.com/en-us/windows/learn-about-windows-hello-and-set-it-up-dae28983-8242-bb2a-d3d1-87c9d265a5f0"));
+            }
+            Shutdown();
+        }
+
+        private void ShowInstanceAlreadyRunningErrorAndExit()
+        {
+            TaskDialog.ShowDialog(new TaskDialogPage
+            {
+                Icon = TaskDialogIcon.Error,
+                Heading = "HelloSSH is already running",
+                Text = "Only one instance of the application can run at a time.",
+                Caption = "HelloSSH is already running",
+                Buttons =
+                {
+                    new TaskDialogButton("Exit")
+                }
+            });
+            Shutdown();
         }
 
         public async void OnApplicationStart(object sender, System.Windows.StartupEventArgs e)
@@ -34,24 +70,15 @@ namespace HelloSSH
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (!(await KeyCredentialManager.IsSupportedAsync()))
+            singleInstanceMutex = new Mutex(true, "{CE870DAD-FE6D-4C89-A42A-B3D4294205CA}", out bool isNew);
+            if (!isNew)
             {
-                var page = new TaskDialogPage
-                {
-                    Heading = "Windows Hello is Unavailable",
-                    Icon = TaskDialogIcon.Error,
-                    Text = "Windows Hello appears to be unavailable. This is probably because you haven't enabled it. Would you like help enabling it?",
-                    Buttons =
-                    {
-                        TaskDialogButton.Yes,
-                        TaskDialogButton.No
-                    }
-                };
-                if (TaskDialog.ShowDialog(page) == TaskDialogButton.Yes)
-                {
-                    Util.OpenURI(new Uri("https://support.microsoft.com/en-us/windows/learn-about-windows-hello-and-set-it-up-dae28983-8242-bb2a-d3d1-87c9d265a5f0"));
-                }
-                Application.Exit();
+                ShowInstanceAlreadyRunningErrorAndExit();
+                return;
+            }
+            if (!await KeyCredentialManager.IsSupportedAsync())
+            {
+                ShowNoHelloErrorAndExit();
                 return;
             }
             var dataStore = new SynchronizedDataStore(new ConfigurationProvider(configLocation));
