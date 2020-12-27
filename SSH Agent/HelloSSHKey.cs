@@ -7,6 +7,7 @@ using Windows.Security.Credentials;
 using Windows.Security.Cryptography.Core;
 using System.Security.Cryptography;
 using Windows.Security.Cryptography;
+using System.Text.Json;
 
 namespace HelloSSH
 {
@@ -71,6 +72,31 @@ namespace HelloSSH
             task.Wait();
             var result = task.Result;
             return result.Result?.ToArray();
+        }
+
+        public KeyCredentialAttestationStatus GetAttestation(out AttestationResult result)
+        {
+            var task = Credential.GetAttestationAsync().AsTask();
+            task.Wait();
+            var taskResult = task.Result;
+            result = taskResult.Status == KeyCredentialAttestationStatus.Success ?
+                new AttestationResult(taskResult) : null;
+            return taskResult.Status;
+        }
+
+        public class AttestationResult
+        {
+            public byte[] CertificateChain { get; private set; }
+            public byte[] Attestation { get; private set; }
+            public AttestationResult(KeyCredentialAttestationResult result)
+            {
+                CertificateChain = Util.GetIBufferBytes(result.CertificateChainBuffer);
+                Attestation = Util.GetIBufferBytes(result.AttestationBuffer);
+            }
+            public string Serialize()
+            {
+                return JsonSerializer.Serialize(this);
+            }
         }
     }
 }

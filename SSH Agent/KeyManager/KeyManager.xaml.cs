@@ -101,7 +101,26 @@ namespace HelloSSH.KeyManager
         }
         private void CopyAuthorizedKeys_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Clipboard.SetText(string.Join("\n", dataStore.Keys.Select(k => k.PublicKeyFingerprint)));
+            System.Windows.Clipboard.SetText(dataStore.GetAuthorizedKeysFile());
+        }
+
+        private void CopyAttestation_Click(object sender, RoutedEventArgs e)
+        {
+            var key = KeysList.SelectedItem as HelloSSHKey;
+            var status = key.GetAttestation(out var result);
+            if (status != Windows.Security.Credentials.KeyCredentialAttestationStatus.Success)
+            {
+                TaskDialog.ShowDialog(new TaskDialogPage
+                {
+                    Caption = "Error retrieving attestation",
+                    Heading = "Couldn't retrieve the attestation",
+                    Icon = TaskDialogIcon.Error,
+                    Text = $"Retrieving the attestation for the key {key.Comment} failed. The result returned by the system was \"{status}\"."
+                });
+                return;
+            }
+
+            System.Windows.Clipboard.SetText(result.Serialize());
         }
     }
 }

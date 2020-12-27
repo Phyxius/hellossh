@@ -14,7 +14,8 @@
                 <MenuItem Header="Copy _authorized_keys file" Click="CopyAuthorizedKeys_Click"/>
                 <Separator/>
                 <MenuItem Header="Copy _selected key fingerprint" Click="CopyFingerprint_Click" IsEnabled="{Binding Path=SelectedIndex, Converter={StaticResource SelectionEnabledValueConverter}}"/>
-                <MenuItem Header="Copy _selected hey hash" Click="CopyHash_Click" IsEnabled="{Binding Path=SelectedIndex, Converter={StaticResource SelectionEnabledValueConverter}}"/>
+                <MenuItem Header="Copy _selected key hash" Click="CopyHash_Click" IsEnabled="{Binding Path=SelectedIndex, Converter={StaticResource SelectionEnabledValueConverter}}"/>
+                <MenuItem Header="Copy _selected key attestation" Click="CopyAttestation_Click" IsEnabled="{Binding Path=SelectedIndex, Converter={StaticResource SelectionEnabledValueConverter}}"/>
             </ContextMenu>
         </ResourceDictionary>
     </Window.Resources>

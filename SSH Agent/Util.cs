@@ -6,8 +6,9 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Windows.Storage.Streams;
 
-namespace HelloSSH.KeyManager
+namespace HelloSSH
 {
     static class Util
     {
@@ -28,6 +29,14 @@ namespace HelloSSH.KeyManager
                 BitmapSizeOptions.FromEmptyOptions());
 
             return imageSource;
+        }
+
+        public static byte[] GetIBufferBytes(IBuffer buffer)
+        {
+            var ret = new byte[buffer.Length];
+            var reader = DataReader.FromBuffer(buffer);
+            reader.ReadBytes(ret);
+            return ret;
         }
     }
 }
