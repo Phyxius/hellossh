@@ -31,3 +31,5 @@ To use the SSH binary that ships with Windows with HelloSSH:
 
 ### Using SSH Under the Windows Subsystem For Linux (WSL)
 To use SSH under WSL, you'll need an external binary to bridge the Windows named pipe implementation to an `AF_UNIX` socket-based one understandable by WSL. Someone else has luckily done this for us already: [wsl-ssh-agent](https://github.com/rupor-github/wsl-ssh-agent). Just change the pipe name it uses to `\\.\pipe\hellossh`. If you're using WSL2, setup is a little trickier, but there are instructions on the same project's page.
+
+Once you've connected WSL to the agent, you also need to add the line `PubKeyAcceptedKeyTypes -rsa-sha2-512` to `~/.ssh/config` (create the directory and file if they don't exist). This will tell SSH to not attempt SHA512-based signatures, which aren't supported by Windows Hello.
