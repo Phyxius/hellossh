@@ -62,6 +62,7 @@ namespace HelloSSH
             };
             agentThread.Start();
             TrayIcon.CreateTrayIcon(dataStore);
+            agent.PrivateKeyRequested += TrayIcon.NotifyKeyUsed;
         }
     }
 }

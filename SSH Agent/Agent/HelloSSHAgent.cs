@@ -11,12 +11,15 @@ using Windows.Security.Cryptography;
 
 namespace HelloSSH.Agent
 {
+    delegate void PrivateKeyNotification(HelloSSHKey key, uint clientProcessId);
     class HelloSSHAgent : AbstractSSHAgent
     {
         readonly SynchronizedDataStore dataStore;
         readonly Configuration configuration;
         readonly ObservableCollection<HelloSSHKey> credentials;
         readonly ReaderWriterLockSlim lockSlim;
+
+        public event PrivateKeyNotification PrivateKeyRequested;
         public HelloSSHAgent(SynchronizedDataStore synchronizedDataStore)
         {
             dataStore = synchronizedDataStore;
@@ -54,6 +57,7 @@ namespace HelloSSH.Agent
                     {
                         return new AgentFailureMessage();
                     }
+                    PrivateKeyRequested?.Invoke(cred, clientProcessId);
                     var blob = cred.SignChallenge(request.Challenge);
                     if (blob == null) return new AgentFailureMessage();
                     return new AgentSignResponseMessage

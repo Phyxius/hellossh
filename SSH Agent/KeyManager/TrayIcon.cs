@@ -1,6 +1,7 @@
 ﻿using HelloSSH.DataStore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,11 @@ namespace HelloSSH.KeyManager
             icon.DoubleClick += ManageButtonClick;
         }
 
+        public static void NotifyKeyUsed(HelloSSHKey key, uint clientProcessId)
+        {
+            var clientProcess = Process.GetProcessById((int)clientProcessId);
+            icon.ShowBalloonTip(3000, "Private Key Requested", $"{clientProcess.ProcessName} wants to sign a challenge with key {key.Comment}.", ToolTipIcon.Info);
+        }
         private static void ExitButtonClick(object sender, EventArgs e)
         {
             icon.Visible = false;
@@ -42,5 +48,6 @@ namespace HelloSSH.KeyManager
         {
             KeyManager.Show(dataStore);
         }
+
     }
 }
