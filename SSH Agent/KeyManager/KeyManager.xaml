@@ -57,7 +57,7 @@
         <ListView Name="KeysList">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <DockPanel>
+                    <DockPanel ContextMenu="{StaticResource CopyContextMenu}">
                         <Image Source="{StaticResource KeyDown}" Height="32" DockPanel.Dock="Left"/>
                         <TextBlock FontSize="14">
                             <TextBlock.Inlines>
