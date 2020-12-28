@@ -158,11 +158,17 @@ namespace HelloSSH
                 (sender, e) =>
                 {
                     var element = sender as AutomationElement;
-                    if (element.Current.ClassName != "Credential Dialog XAML Host")
+                    if (element.Current.ClassName != "Credential Dialog Xaml Host")
                     {
                         return;
                     }
-                    Util.SetForegroundWindow(new IntPtr(element.Current.NativeWindowHandle));
+                    var handle = new IntPtr(element.Current.NativeWindowHandle);
+                    while (Util.IsWindow(handle))
+                    {
+                        Util.SetForegroundWindow(handle);
+                        Util.BringWindowToTop(handle);
+                        Thread.Sleep(10);
+                    }
                 }
             );
         }

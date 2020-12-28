@@ -42,5 +42,10 @@ namespace HelloSSH
 
         [DllImport("USER32.DLL")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("USER32.DLL")]
+        public static extern bool IsWindow(IntPtr hWnd);
+        [DllImport("USER32.DLL")]
+        public static extern bool BringWindowToTop(IntPtr hWnd);
     }
 }
