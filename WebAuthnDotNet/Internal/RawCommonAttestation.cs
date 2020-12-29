@@ -73,18 +73,18 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawCommonAttestation
     {
-        public uint dwVersion { get; set; }
-        public string pwszAlg { get; set; }
-        public int lAlg { get; set; }
-        public uint cbSignature { get; set; }
-        public byte[] pbSignature { get; set; }
-        public uint cX5c { get; set; }
+        public uint dwVersion;
+        public string pwszAlg;
+        public int lAlg;
+        public uint cbSignature;
+        public byte[] pbSignature;
+        public uint cX5c;
         public RawX5C[] pX5c { get; set;}
-        public string pwszVer { get; set; }
-        public uint cbCertInfo { get; set; }
-        public byte[] pbCertInfo { get; set; }
-        public uint cbPubArea { get; set; }
-        public byte[] pbPubArea { get; set; }
+        public string pwszVer;
+        public uint cbCertInfo;
+        public byte[] pbCertInfo;
+        public uint cbPubArea;
+        public byte[] pbPubArea;
 
         public CommonAttestation ToCommonAttestation()
         {

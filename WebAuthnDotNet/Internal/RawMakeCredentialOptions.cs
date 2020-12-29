@@ -80,17 +80,17 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawMakeCredentialOptions
     {
-        uint dwVersion { get; set; }
-        uint dwTimeoutMilliseconds { get; set; }
-        IntPtr CredentialList { get; set; }
-        RawWebAuthnExtensions Extensions { get; set; }
-        uint dwAuthenticatorAttachment { get; set; }
-        uint bRequireResidentKey { get; set; }
-        uint dwUserVerificationRequirement { get; set; }
-        uint dwAttestationConveyancePreference { get; set; }
-        uint dwFlags { get; set; }
-        Guid? pCancelationId { get; set; }
-        RawCredentialList pExcludeCredentialList { get; set; }
+        uint dwVersion;
+        uint dwTimeoutMilliseconds;
+        IntPtr CredentialList;
+        RawWebAuthnExtensions Extensions;
+        uint dwAuthenticatorAttachment;
+        uint bRequireResidentKey;
+        uint dwUserVerificationRequirement;
+        uint dwAttestationConveyancePreference;
+        uint dwFlags;
+        Guid? pCancelationId;
+        RawCredentialList pExcludeCredentialList;
 
         public RawMakeCredentialOptions(AuthenticatorMakeCredentialOptions template)
         {

@@ -8,6 +8,6 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct BoolPtr
     {
-        public bool BooleanValue { get; set; }
+        public bool BooleanValue;
     }
 }

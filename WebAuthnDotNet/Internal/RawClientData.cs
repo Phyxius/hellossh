@@ -35,10 +35,10 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawClientData
     {
-        public uint dwVersion { get; set; }
-        public uint cbClientDataJSON { get; set; }
-        public byte[] pbClientDataJSON { get; set; }
-        public string pwszHashAlgId { get; set; }
+        public uint dwVersion;
+        public uint cbClientDataJSON;
+        public byte[] pbClientDataJSON;
+        public string pwszHashAlgId;
         public RawClientData(ClientData template)
         {
             dwVersion = (uint)template.Version;

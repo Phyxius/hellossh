@@ -41,9 +41,9 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawCoseCredentialParameter
     {
-        uint dwVersion { get; set; }
-        string pwszCredentialType { get; set; }
-        int lAlg { get; set; }
+        uint dwVersion;
+        string pwszCredentialType;
+        int lAlg;
         
         public RawCoseCredentialParameter(CoseCredentialParameter template)
         {

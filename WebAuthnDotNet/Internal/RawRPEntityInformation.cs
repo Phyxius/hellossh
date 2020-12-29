@@ -32,10 +32,10 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawRPEntityInformation
     {
-        public uint dwVersion { get; set; }
-        public string pwszId { get; set; }
-        public string pwszName { get; set; }
-        public string pwszIcon { get; set; }
+        public uint dwVersion;
+        public string pwszId;
+        public string pwszName;
+        public string pwszIcon;
 
         public RawRPEntityInformation(RPEntityInformation template)
         {

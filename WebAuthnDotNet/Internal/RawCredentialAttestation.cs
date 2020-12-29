@@ -76,20 +76,20 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawCredentialAttestation
     {
-        public uint dwVersion { get; set; }
-        public string pwszFormatType { get; set; }
-        public uint cbAuthenticatorData { get; set; }
-        public byte[] pbAuthenticatorData { get; set; }
-        public uint cbAttestation { get; set; }
-        public byte[] pbAttestation { get; set; }
-        public uint dwAttestationDecodeType { get; set; }
-        public RawCommonAttestation? pvAttestationDecode { get; set; }
-        public uint cbAttestationObject { get; set; }
-        public byte[] pbAttestationObject { get; set; }
-        public uint cbCredentialId { get; set; }
-        public byte[] pbCredentialId { get; set; }
-        public RawWebAuthnExtensions Extensions { get; set; }
-        public uint dwUsedTransport { get; set; }
+        public uint dwVersion;
+        public string pwszFormatType;
+        [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<byte>))]
+        public byte[] pbAuthenticatorData;
+        public uint cbAttestation;
+        public byte[] pbAttestation;
+        public uint dwAttestationDecodeType;
+        public RawCommonAttestation? pvAttestationDecode;
+        public uint cbAttestationObject;
+        public byte[] pbAttestationObject;
+        public uint cbCredentialId;
+        public byte[] pbCredentialId;
+        public RawWebAuthnExtensions Extensions;
+        public uint dwUsedTransport;
 
         public CredentialAttestation ToCredentialAttestation()
         {

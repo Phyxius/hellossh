@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WebAuthnDotNet
 {
-    class ClientData
+    public class ClientData
     {
         public const int CurrentVersion = 1;
         public int Version { get; set; } = CurrentVersion;

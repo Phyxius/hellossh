@@ -17,8 +17,8 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawCoseCredentialParameters
     {
-        public uint cCredentialParamters { get; set; }
-        public RawCoseCredentialParameter[] pCredentialParameters { get; set; }
+        public uint cCredentialParamters;
+        public RawCoseCredentialParameter[] pCredentialParameters;
 
         public RawCoseCredentialParameters(IEnumerable<RawCoseCredentialParameter> rawCoseCredentialParameters)
         {

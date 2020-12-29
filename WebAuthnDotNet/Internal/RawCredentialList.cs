@@ -21,8 +21,8 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawCredentialList
     {
-        uint cCredentials { get; set; }
-        CredentialEx[] ppCredentials { get; set; }
+        uint cCredentials;
+        CredentialEx[] ppCredentials;
 
         public RawCredentialList(IEnumerable<RawCredentialEx> rawCredentials)
         {

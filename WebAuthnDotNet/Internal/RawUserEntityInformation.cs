@@ -38,12 +38,12 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawUserEntityInformation
     {
-        public uint dwVersion { get; set; }
-        public uint cbId { get; set; }
-        public byte[] pbId { get; set; }
-        public string pwszName { get; set; }
-        public string pwszIcon { get; set; }
-        public string pwszDisplayName { get; set; }
+        public uint dwVersion;
+        public uint cbId;
+        public byte[] pbId;
+        public string pwszName;
+        public string pwszIcon;
+        public string pwszDisplayName;
 
         public RawUserEntityInformation(UserEntityInformation template)
         {

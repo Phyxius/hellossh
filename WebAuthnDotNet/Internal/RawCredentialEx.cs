@@ -41,11 +41,11 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawCredentialEx
     {
-        uint dwVersion { get; set; }
-        uint cbId { get; set; }
-        byte[] pbId { get; set; }
-        string pwszCredentialType { get; set; }
-        uint dwTransports { get; set; }
+        uint dwVersion;
+        uint cbId;
+        byte[] pbId;
+        string pwszCredentialType;
+        uint dwTransports;
 
         public RawCredentialEx(CredentialEx template)
         {

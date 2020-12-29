@@ -67,17 +67,17 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawAuthenticatorGetAssertionOptions
     {
-        uint dwVersion { get; set; }
-        uint dwTimeoutMilliseconds { get; set; }
-        IntPtr CredentialList { get; set; }
-        RawWebAuthnExtensions Extensions { get; set; }
-        uint dwAuthenticatorAttachment { get; set; }
-        uint dwUserVerificationRequirement { get; set; }
-        uint dwFlags { get; set; }
-        string pwszU2fAppId { get; set; }
-        BoolPtr pbU2fAppId { get; set; }
-        Guid? pCancelationId { get; set; }
-        RawCredentialList pAllowCredentialsList { get; set; }
+        uint dwVersion;
+        uint dwTimeoutMilliseconds;
+        IntPtr CredentialList;
+        RawWebAuthnExtensions Extensions;
+        uint dwAuthenticatorAttachment;
+        uint dwUserVerificationRequirement;
+        uint dwFlags;
+        string pwszU2fAppId;
+        BoolPtr pbU2fAppId;
+        Guid? pCancelationId;
+        RawCredentialList pAllowCredentialsList;
 
         public RawAuthenticatorGetAssertionOptions(AuthenticatorGetAssertionOptions template)
         {

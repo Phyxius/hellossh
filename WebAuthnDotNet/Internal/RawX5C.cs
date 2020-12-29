@@ -18,8 +18,8 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawX5C
     {
-        public uint cbData { get; set; }
-        public byte[] pbData { get; set; }
+        public uint cbData;
+        public byte[] pbData;
 
         public X509Certificate ToX509Certificate()
         {

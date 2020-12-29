@@ -29,10 +29,10 @@ namespace WebAuthnDotNet.Internal
     [StructLayout(LayoutKind.Sequential)]
     internal struct RawCredential
     {
-        uint dwVersion { get; set; }
-        uint cbId { get; set; }
-        byte[] pbId { get; set; }
-        string pwszCredentialType { get; set; }
+        uint dwVersion;
+        uint cbId;
+        byte[] pbId;
+        string pwszCredentialType;
 
         public RawCredential(Credential template)
         {
