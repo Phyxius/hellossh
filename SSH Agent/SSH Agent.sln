@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSHAgentFramework", "..\Abs
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8ACE443D-AF96-4581-81D5-D29F3135620D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAuthnDotNet", "..\WebAuthnDotNet\WebAuthnDotNet.csproj", "{3D72939F-B5E5-411E-A851-9E77810D0640}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAuthnTest", "..\WebAuthnTest\WebAuthnTest.csproj", "{41472BB0-FF19-442C-9CE6-8B4E3221A603}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,14 @@ Global
 		{F9112BD2-3CCD-449B-9DE0-2C12C9105428}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9112BD2-3CCD-449B-9DE0-2C12C9105428}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9112BD2-3CCD-449B-9DE0-2C12C9105428}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D72939F-B5E5-411E-A851-9E77810D0640}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D72939F-B5E5-411E-A851-9E77810D0640}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D72939F-B5E5-411E-A851-9E77810D0640}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D72939F-B5E5-411E-A851-9E77810D0640}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41472BB0-FF19-442C-9CE6-8B4E3221A603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41472BB0-FF19-442C-9CE6-8B4E3221A603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41472BB0-FF19-442C-9CE6-8B4E3221A603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41472BB0-FF19-442C-9CE6-8B4E3221A603}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
