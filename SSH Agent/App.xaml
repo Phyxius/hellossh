@@ -10,8 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/HelloSSH;component/KeyManager/Icon.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <Color x:Key="BackgroundColor">#E7F7FF</Color>
-            <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
+            <SolidColorBrush x:Key="BackgroundBrush" Color="DarkGray"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
