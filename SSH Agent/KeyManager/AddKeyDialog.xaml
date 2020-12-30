@@ -9,7 +9,8 @@
         Title="Create New Key" Width="320" Height="310" ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="GroupBox">
-            <Setter Property="BorderBrush" Value="DarkGray"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value=".5"/>
         </Style>
     </Window.Resources>
     <DockPanel Margin="10,0,10,10">
