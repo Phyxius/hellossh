@@ -23,6 +23,8 @@ namespace HelloSSH.DataStore
             else
             {
                 Configuration = Configuration.DefaultSettings;
+                var folder = Directory.GetParent(configurationFilePath);
+                folder.Create();
                 Save();
                 defaultSettingsCreated = true;
             }

@@ -7,12 +7,21 @@ using HelloSSH.KeyManager;
 using HelloSSH.DataStore;
 using Windows.Security.Credentials;
 using System.Windows.Automation;
+using System.IO;
 
 namespace HelloSSH
 {
     partial class Program : System.Windows.Application
     {
-        const string DefaultConfigLocation = "helossh.json";
+#if DEBUG
+        static readonly string DefaultConfigLocation = "helossh.json";
+#else
+        static readonly string DefaultConfigLocation = Path.Join(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "HelloSSH",
+            "hellossh.json"
+            );
+#endif
         private static Mutex singleInstanceMutex;
         private void PrintUsageAndExit()
         {
