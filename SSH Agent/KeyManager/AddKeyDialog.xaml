@@ -15,8 +15,8 @@
     </Window.Resources>
     <DockPanel Margin="10,0,10,10">
         <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" Margin="0,10,0,0">
-            <Button DockPanel.Dock="Left" Padding="3" Click="Cancel">Cancel</Button>
-            <Button x:Name="CreateKeyButton" DockPanel.Dock="Right" Padding="3" IsEnabled="False" Click="CreateKey">Create Key</Button>
+            <Button DockPanel.Dock="Left" Padding="3" Click="Cancel" IsCancel="True">Cancel</Button>
+            <Button x:Name="CreateKeyButton" DockPanel.Dock="Right" Padding="3" IsEnabled="False" Click="CreateKey" IsDefault="True">Create Key</Button>
         </DockPanel>
         <StackPanel>
             <TextBlock Text="Create new key&#8230;" FontWeight="Light" FontSize="34"/>

@@ -58,5 +58,10 @@ namespace HelloSSH.KeyManager
         {
             CreateKeyButton.IsEnabled = !existingKeyNames.Contains(KeyNameInput.Text.Trim());
         }
+
+        private void Cancel(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }
