@@ -45,3 +45,7 @@ In all cases, an attacker with administrative access to the PC can probably indu
 ## Summary
 
 HelloSSH when used with a TPM provides significant protection against attackers whose goal is to export private keys for offline use, and reasonably strong protection against attackers whose goal is to simply induce the device to sign challenges on their behalf. If no TPM is available, HelloSSH provides as much security as Windows can provide, which is limited.
+
+## Bug Reporting
+
+If you find a security bug in HelloSSH, please DO NOT file a public bug report. Instead, send me an email at shea@polansky.co with the subject `HelloSSH Security Report` and I will work with you to fix and disclose it. This is a hobby project, so I cannot make specific guarantees, but I will do my best to respond within 24 hours and remediate any applicable bugs within 30 days.
