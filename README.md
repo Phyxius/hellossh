@@ -17,6 +17,8 @@ HelloSSH exposes only operations made available by the Windows Hello APIs (AKA [
 4. If you change your Windows PIN, reset your TPM, or (depending on your hardware) update your BIOS, your keys might be erased. This probably won't happen during the regular courses of use, but you should always have a backup method to access your servers just in case (see above).
 5. You will be prompted to authenticate for *every* use of the key. This can get a little annoying, but Microsoft doesn't provide an option for timed access. 
 
+See [Security](SECURITY.md) for more information about HelloSSH's threat model and technical details.
+
 ## Installation and Prerequisites
 See [Install](Install.md).
 ## Using HelloSSH
