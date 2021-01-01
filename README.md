@@ -17,19 +17,9 @@ HelloSSH exposes only operations made available by the Windows Hello APIs (AKA [
 4. If you change your Windows PIN, reset your TPM, or (depending on your hardware) update your BIOS, your keys might be erased. This probably won't happen during the regular courses of use, but you should always have a backup method to access your servers just in case (see above).
 5. You will be prompted to authenticate for *every* use of the key. This can get a little annoying, but Microsoft doesn't provide an option for timed access. 
 
+## Installation and Prerequisites
+See [Install](Install.md).
 ## Using HelloSSH
 To use HelloSSH, simply run it. The first time, you'll get a prompt to set up a key with a default name. If you want to use a different name, or create multiple keys, you can access the management UI by double clicking on the HelloSSH system tray icon (it's the blue square with the key and padlock). You'll also have to configure your system's SSH binaries to use it instead of the agent that ships with Windows.
 
 Once you've generated some keys, you can also use the key management UI to export individual fingerprints or all of them at once. You can also list them with `ssh-add -L` (after setting up SSH, see below).
-
-### Using `ssh.exe`
-To use the SSH binary that ships with Windows with HelloSSH:
-
-1. [Set the environment variable](https://www.architectryan.com/2018/08/31/how-to-change-environment-variables-on-windows-10/) `SSH_AUTH_SOCK` to `\\.\pipe\hellossh`. Make sure to change the variable just for your user. You may need to log out and back in for this to fully take effect.
-2. Add the line `PubKeyAcceptedKeyTypes -rsa-sha2-512` to `%USERPROFILE%\.ssh\config` (create the file and directory if they don't exist). This will tell SSH to not attempt SHA512-based signatures, which aren't supported by Windows Hello.
-3. Create a shortcut to `HelloSSH.exe` in `%APPDATA%\Roaming\Microsoft\Windows\Start Menu\Programs\Startup` to have HelloSSH start at boot.
-
-### Using SSH Under the Windows Subsystem For Linux (WSL)
-To use SSH under WSL, you'll need an external binary to bridge the Windows named pipe implementation to an `AF_UNIX` socket-based one understandable by WSL. Someone else has luckily done this for us already: [wsl-ssh-agent](https://github.com/rupor-github/wsl-ssh-agent). Just change the pipe name it uses to `\\.\pipe\hellossh`. If you're using WSL2, setup is a little trickier, but there are instructions on the same project's page.
-
-Once you've connected WSL to the agent, you also need to add the line `PubKeyAcceptedKeyTypes -rsa-sha2-512` to `~/.ssh/config` (create the directory and file if they don't exist). This will tell SSH to not attempt SHA512-based signatures, which aren't supported by Windows Hello.
