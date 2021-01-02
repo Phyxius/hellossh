@@ -25,3 +25,7 @@ See [Install](Install.md).
 To use HelloSSH, simply run it. The first time, you'll get a prompt to set up a key with a default name. If you want to use a different name, or create multiple keys, you can access the management UI by double clicking on the HelloSSH system tray icon (it's the blue square with the key and padlock). You'll also have to configure your system's SSH binaries to use it instead of the agent that ships with Windows.
 
 Once you've generated some keys, you can also use the key management UI to export individual fingerprints or all of them at once. You can also list them with `ssh-add -L` (after setting up SSH, see below).
+
+## Alternatives
+
+If you are looking to use existing hardware security devices (such as Smart Cards, [TPM-backed Windows certificates](https://polansky.co/blog/tpm-backed-certificates-windows/), or YubiKeys), consider using [WinCryptSSHAgent](https://github.com/buptczq/WinCryptSSHAgent), which uses the Windows Certificate APIs for key operations. 
