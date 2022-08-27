@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -74,7 +75,14 @@ namespace SSHAgentFramework
             {
                 byte[] buffer = response.ToAgentMessage().Serialize();
                 Console.WriteLine("> " + BitConverter.ToString(buffer).Replace("-", ""));
-                pipeServer.Write(buffer);
+                try
+                {
+                    pipeServer.Write(buffer);
+                }
+                catch (IOException)
+                {
+                    //do nothing, this is OK
+                }
             }
         }
     }
