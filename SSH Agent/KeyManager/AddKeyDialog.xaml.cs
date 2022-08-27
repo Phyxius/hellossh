@@ -46,12 +46,7 @@ namespace HelloSSH.KeyManager
             };
             dialog.existingKeyNames.Add("");
             dialog.ShowDialog();
-            if (dialog.canceled)
-            {
-                return null;
-            }
-
-            return dialog.KeyNameInput.Text.Trim();
+            return dialog.canceled ? null : dialog.KeyNameInput.Text.Trim();
         }
 
         private void KeyNameInput_TextChanged(object sender, TextChangedEventArgs e)
